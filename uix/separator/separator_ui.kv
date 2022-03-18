@@ -1,0 +1,10 @@
+#:kivy 2.1.0
+<Separator>:
+    size_hint_y: None
+    height: root.line_thickness
+    canvas:
+        Color:
+            rgba: root.line_color
+        Line:
+            points: (root.x, root.y, root.x + root.width, root.y)
+            width: root.line_thickness

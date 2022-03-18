@@ -1,0 +1,20 @@
+#:kivy 2.1.0
+<RadioButton>:
+    adaptive_height: True
+    spacing: "5dp"
+    active: _check_box.active
+    MDCheckbox:
+        id: _check_box
+        group: root.group
+        active: root.active
+        allow_no_selection: False
+        pos_hint: {"center_y": .5}
+    MDLabel:
+        markup: True
+        text: f"[ref=text_bind]{root.text}[/ref]"
+        theme_text_color: "Secondary" if not root.active else "Primary"
+        adaptive_height: True
+        pos_hint: {"center_y": .5}
+        on_ref_press:
+            if args[1] == "text_bind" and root.get_active_group_member(root.group) != root: \
+            _check_box.active = not _check_box.active

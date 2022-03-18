@@ -1,0 +1,10 @@
+#:kivy 2.1.0
+#:import OpacityScrollEffect kivy.effects.opacityscroll.OpacityScrollEffect
+<ScrollBar>:
+    do_scroll_x: False
+    do_scroll_y: True
+    scroll_type: ["bars", "content"]
+    effect_cls: OpacityScrollEffect
+    bar_color: app.theme_cls.opposite_bg_darkest
+    bar_inactive_color: (*app.theme_cls.opposite_bg_darkest[:3], .25)
+    bar_width: "5dp"

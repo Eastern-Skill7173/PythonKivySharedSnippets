@@ -1,0 +1,23 @@
+#:kivy 2.1.0
+#:import Window kivy.core.window.Window
+<IconSnackBar>:
+    snackbar_x: "15dp"
+    snackbar_y: "10dp"
+    size_hint_x: (Window.width - self.snackbar_x * 2) / Window.width
+    md_bg_color: self.theme_cls.bg_light
+    MDIcon:
+        icon: root.icon_left
+        size_hint: (None, None)
+        size: ("24dp", "24dp")
+        pos_hint: {"center_x": .5, "center_y": .5}
+    MDLabel:
+        text: root.text
+        font_size: root.font_size
+        theme_text_color: root.theme_text_color
+        adaptive_height: True
+        shorten: True
+        shorten_from: "right"
+        pos_hint: {"center_y": .5}
+    MDIconButton:
+        icon: "close"
+        on_release: root.dismiss()
