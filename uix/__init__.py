@@ -1,4 +1,5 @@
 from typing import Final
+from constants import UIX_DIRECTORY
 from kivy.metrics import sp
 from kivy.factory import Factory
 
@@ -13,10 +14,28 @@ TYPOGRAPHY: Final = {
 
 for class_name, module in (
     (
-
+        "FlatButton",
+        f"{UIX_DIRECTORY}.button",
     ),
     (
-
+        "IconSnackBar",
+        f"{UIX_DIRECTORY}.iconsnackbar",
+    ),
+    (
+        "MDRadioButton",
+        f"{UIX_DIRECTORY}.mdradiobutton",
+    ),
+    (
+        "RadioButton",
+        f"{UIX_DIRECTORY}.radiobutton",
+    ),
+    (
+        "ScrollBar",
+        f"{UIX_DIRECTORY}.scrollbar",
+    ),
+    (
+        "Separator",
+        f"{UIX_DIRECTORY}.separator",
     ),
 ):
     Factory.register(classname=class_name, module=module)

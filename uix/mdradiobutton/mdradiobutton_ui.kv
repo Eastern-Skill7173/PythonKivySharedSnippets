@@ -1,14 +1,17 @@
 #:kivy 2.1.0
-<RadioButton>:
+<MDRadioButton>:
     adaptive_height: True
     spacing: "5dp"
     active: _check_box.active
+    allow_no_selection: False
     MDCheckbox:
         id: _check_box
         group: root.group
         active: root.active
-        allow_no_selection: False
+        allow_no_selection: root.allow_no_selection
         pos_hint: {"center_y": .5}
+        size_hint: (None, None)
+        size: ("48dp", "48dp")
     MDLabel:
         markup: True
         text: f"[ref=text_bind]{root.text}[/ref]"

@@ -30,7 +30,7 @@ class FlatButton(Button):
     """
 
     def on_state(self, instance: "FlatButton", state: str) -> None:
-        if self.state == "down":
+        if state == "down":
             self.color = self.active_color
         else:
             self.color = self.normal_color

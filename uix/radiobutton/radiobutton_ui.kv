@@ -1,19 +1,21 @@
 #:kivy 2.1.0
 <RadioButton>:
     size_hint_y: None
-    height: self.minimum_height
+    height: root.minimum_height
     spacing: "5dp"
     active: _check_box.active
+    allow_no_selection: False
     CheckBox:
         id: _check_box
         group: root.group
         active: root.active
-        allow_no_selection: False
+        allow_no_selection: root.allow_no_selection
+        pos_hint: {"center_y": .5}
         size_hint: (None, None)
         size: ("48dp", "48dp")
     Label:
         markup: True
-        text: "[ref=text_bind]{}[/ref]".format(root.text)
+        text: f"[ref=text_bind]{root.text}[/ref]"
         text_size: self.width, None
         size_hint_y: None
         height: self.texture_size[1]

@@ -1,6 +1,7 @@
-# Project Title
+# SharedSnippets
 
-One Paragraph of project description goes here
+This repo contains a set of common python, kivy & kivymd utilities 
+I have found myself using throughout the years and a base template for my projects.
 
 ## Getting Started
 
@@ -58,13 +59,13 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Kivy](https://kivy.org/#home) - The core GUI framework
+* [KivyMD](https://github.com/kivymd/KivyMD) - Kivy widget extensions following material design
+* [Python](https://www.python.org/) - The core programming language
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) & [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
@@ -72,7 +73,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Eastern-Skill7173** - *author and creator* - [Eastern-Skill7173](https://github.com/Eastern-Skill7173)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
@@ -82,6 +83,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Special thanks to the kivy & kivymd team
+* Anyone who has shared or committed to the project
+* Also, _Billie Thompson_ for this README template
