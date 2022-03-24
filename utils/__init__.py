@@ -2,8 +2,14 @@ import os
 import subprocess
 import json
 import webbrowser
-import constants
 from typing import Callable, Union, Optional
+from constants import (
+    GIGABYTE,
+    MEGABYTE,
+    KILOBYTE,
+    HOUR,
+    MINUTE,
+)
 from threading import Thread
 from kivy import platform
 from kivy.logger import LoggerHistory
@@ -43,12 +49,12 @@ def human_readable_size(size_in_bytes: Union[int, float], rounding_point: int = 
     :param rounding_point: Position of the floating point for the `round` built-in
     :return: str
     """
-    if size_in_bytes >= constants.GIGABYTE:
-        string_converted_size = f"{round(size_in_bytes / constants.GIGABYTE, rounding_point)} GB"
-    elif size_in_bytes >= constants.MEGABYTE:
-        string_converted_size = f"{round(size_in_bytes / constants.MEGABYTE, rounding_point)} MB"
-    elif size_in_bytes >= constants.KILOBYTE:
-        string_converted_size = f"{round(size_in_bytes / constants.KILOBYTE, rounding_point)} KB"
+    if size_in_bytes >= GIGABYTE:
+        string_converted_size = f"{round(size_in_bytes / GIGABYTE, rounding_point)} GB"
+    elif size_in_bytes >= MEGABYTE:
+        string_converted_size = f"{round(size_in_bytes / MEGABYTE, rounding_point)} MB"
+    elif size_in_bytes >= KILOBYTE:
+        string_converted_size = f"{round(size_in_bytes / KILOBYTE, rounding_point)} KB"
     else:
         string_converted_size = f"{size_in_bytes} Bytes"
     return string_converted_size
@@ -60,15 +66,15 @@ def human_readable_duration(seconds: Union[int, float]) -> str:
     :param seconds: Length of an audio file in seconds
     :return: str
     """
-    if seconds >= constants.HOUR:
+    if seconds >= HOUR:
         string_converted_duration = \
-            f"{int(seconds // constants.HOUR)}:" \
-            f"{int(seconds % constants.HOUR // constants.MINUTE):02d}:" \
-            f"{int(seconds % constants.HOUR % constants.MINUTE):02d}"
-    elif seconds >= constants.MINUTE:
+            f"{int(seconds // HOUR)}:" \
+            f"{int(seconds % HOUR // MINUTE):02d}:" \
+            f"{int(seconds % HOUR % MINUTE):02d}"
+    elif seconds >= MINUTE:
         string_converted_duration = \
-            f"{int(seconds // constants.MINUTE)}:" \
-            f"{int(seconds % constants.MINUTE):02d}"
+            f"{int(seconds // MINUTE)}:" \
+            f"{int(seconds % MINUTE):02d}"
     else:
         string_converted_duration = f"0:{int(seconds):02d}"
     return string_converted_duration
@@ -144,13 +150,15 @@ def switch_screen(screen_manager,
         screen_manager.transition = ending_transition
 
 
-def open_link(link: str) -> None:
+def open_link(link: str, new: int = 2, auto_raise: bool = True) -> None:
     """
     Convenience function to open the given url in user's default browser
     :param link: URL Address to be opened in user's default browser
+    :param new: Where to open the link ( in a new tab, existing tab or new page )
+    :param auto_raise: Whether to raise the browser window or not
     :return: None
     """
-    webbrowser.open(link, new=2, autoraise=True)
+    webbrowser.open(link, new=new, autoraise=auto_raise)
 
 
 def open_file(file_path: str) -> None:

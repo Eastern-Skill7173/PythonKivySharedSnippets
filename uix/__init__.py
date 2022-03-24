@@ -26,6 +26,14 @@ for class_name, module in (
         f"{UIX_DIRECTORY}.mdradiobutton",
     ),
     (
+        "NavigationRailItem",
+        f"{UIX_DIRECTORY}.navigationrail",
+    ),
+    (
+        "NavigationRail",
+        f"{UIX_DIRECTORY}.navigationrail",
+    ),
+    (
         "RadioButton",
         f"{UIX_DIRECTORY}.radiobutton",
     ),
