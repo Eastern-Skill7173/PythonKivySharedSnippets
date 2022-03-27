@@ -3,6 +3,8 @@ from typing import Final
 from plyer import storagepath
 
 __all__ = (
+    "AUTHOR_GITHUB_URL",
+    "PROJECT_GITHUB_URL",
     "STARTUP_WIDTH",
     "STARTUP_HEIGHT",
     "UIX_DIRECTORY",
@@ -27,6 +29,8 @@ __all__ = (
 )
 
 
+AUTHOR_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173"
+PROJECT_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173/SharedSnippets"
 STARTUP_WIDTH: Final = "800"
 STARTUP_HEIGHT: Final = "600"
 # Be used with `os.path.join(...)`

@@ -88,20 +88,24 @@ def get_logger_history() -> str:
     return '\n'.join(log_record.message for log_record in reversed(LoggerHistory.history))
 
 
-def read_json_file(path: str) -> Optional[dict]:
+def read_json_file(path: str, silent: bool = True) -> Optional[dict]:
     """
     Convenience function to read a json file with catching exceptions
     :param path: Path to the json file
+    :param silent: Whether to ignore exceptions or not
     :return: Optional[dict]
     """
     content = None
+    exception = None
     try:
         with open(path, 'r') as json_file:
             content = json.load(json_file)
-    except FileNotFoundError:
-        pass
-    except json.decoder.JSONDecodeError:
-        pass
+    except FileNotFoundError as file_not_found_error:
+        exception = file_not_found_error
+    except json.decoder.JSONDecodeError as json_decode_error:
+        exception = json_decode_error
+    if not silent and exception:
+        raise exception
     return content
 
 

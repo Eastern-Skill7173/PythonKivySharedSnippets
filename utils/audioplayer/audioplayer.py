@@ -1,3 +1,4 @@
+import os
 from typing import Iterable, Union
 from kivy.utils import platform
 from kivy.clock import Clock
@@ -9,7 +10,7 @@ __all__ = (
 )
 
 
-if platform == "android":
+if platform == "android" and os.getenv("ANDROID_PLAYER_INTEGRATION"):
     from _android_player_integration import AndroidSoundPlayer
     SoundLoader.register(AndroidSoundPlayer)
 
@@ -17,6 +18,10 @@ if platform == "android":
 class AudioPlayer:
     """
     Class is still not fully implemented.
+    BUG:
+        In kivy 2.1.0, calling `.stop()` on an audio file and then `.play()`
+        causes audio to restart from beginning. When tested on 2.0.0, the error
+        was not there.
     """
 
     def __init__(self):
