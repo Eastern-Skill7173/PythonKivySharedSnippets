@@ -42,15 +42,17 @@ class MDLogLayout(MDBoxLayout):
         self.register_event_type("on_save_changes")
         self.register_event_type("on_save_log")
 
-    def on_save_changes(self) -> None:
+    def on_save_changes(self, button) -> None:
         """
         Dummy method for registering 'on_save_changes' event type
+        :param button: Button instance that triggers the event
         :return: None
         """
 
-    def on_save_log(self) -> None:
+    def on_save_log(self, button) -> None:
         """
         Dummy method for registering 'on_save_log' event type
+        :param button: Button instance that triggers the event
         :return: None
         """
 

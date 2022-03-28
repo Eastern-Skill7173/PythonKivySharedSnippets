@@ -26,13 +26,13 @@
         size_hint: (None, None)
         size: self.texture_size
         on_release:
-            root.dispatch("on_save_changes")
+            root.dispatch("on_save_changes", self)
     Button:
         text: "SAVE LOG"
         size_hint: (None, None)
         size: self.texture_size
         on_release:
-            root.dispatch("on_save_log")
+            root.dispatch("on_save_log", self)
     TextInput:
         text: root.logger_history
         font_size: TYPOGRAPHY["secondary-label"]

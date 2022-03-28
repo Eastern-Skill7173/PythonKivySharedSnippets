@@ -16,6 +16,7 @@ from kivy.logger import LoggerHistory
 
 __all__ = (
     "threaded",
+    "move_index",
     "human_readable_size",
     "human_readable_duration",
     "get_logger_history",
@@ -40,6 +41,17 @@ def threaded(function: Callable):
         return thread
 
     return _run_in_thread
+
+
+def move_index(list_obj: list, element_index: int, target_index: int) -> None:
+    """
+    Convenience function to move and element within a list
+    :param list_obj: The list instance
+    :param element_index: The index of the current element
+    :param target_index: The target index to be moved to
+    :return: None
+    """
+    list_obj.insert(target_index, list_obj.pop(element_index))
 
 
 def human_readable_size(size_in_bytes: Union[int, float], rounding_point: int = 2) -> str:
