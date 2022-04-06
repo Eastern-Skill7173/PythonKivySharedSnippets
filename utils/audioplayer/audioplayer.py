@@ -1,8 +1,8 @@
 import os
-from typing import Iterable, Union
+from typing import Iterable, Union, Final
 from kivy.utils import platform
 from kivy.clock import Clock
-from kivy.core.audio import SoundLoader
+from kivy.core.audio import SoundLoader, Sound
 from utils import human_readable_duration
 
 __all__ = (
@@ -10,6 +10,7 @@ __all__ = (
 )
 
 
+# TODO: integrate player with windows and linux as well
 if platform == "android" and os.getenv("ANDROID_PLAYER_INTEGRATION"):
     from _android_player_integration import AndroidSoundPlayer
     SoundLoader.register(AndroidSoundPlayer)
@@ -18,7 +19,7 @@ if platform == "android" and os.getenv("ANDROID_PLAYER_INTEGRATION"):
     must set the "ANDROID_PLAYER_INTEGRATION" environmental variable to "True".
     like so:
     
-        `import os
+        import os
         
         os.environ["ANDROID_PLAYER_INTEGRATION"] = "True"
         
@@ -26,7 +27,6 @@ if platform == "android" and os.getenv("ANDROID_PLAYER_INTEGRATION"):
         
         from utils.audioplayer import AudioPlayer
         ...
-        `
     """
 
 
@@ -43,9 +43,18 @@ class AudioPlayer:
         causes audio to restart from beginning. When tested on 2.0.0, the error
         was not there.
     """
+    _ALLOWED_CLASSES: Final = (Sound, str)
+    """
+    Private tuple of allowed classes
+    to check types when registering a new alias
+    """
+    _aliases = {}
+    """
+    Private dictionary containing aliases
+    """
 
     def __init__(self,
-                 queue: Iterable[str] = (),
+                 queue: Iterable = (),
                  volume: Union[int, float] = 1,
                  loop: bool = False,
                  estimate_position: bool = True,
@@ -53,13 +62,12 @@ class AudioPlayer:
         self._external_stop_call = False
         self._queue_progress_index = -1
         self._queue = []
-        self.load(*queue)
         self._volume = volume
+        self.load(*queue)
         self._loop = loop
         self._estimate_position = estimate_position
         self._interval = interval
         self._pos_estimate = 0
-        self._human_readable_pos_estimate = human_readable_duration(self._pos_estimate)
         self._state = "queue empty"
         self._clock_event = None
         self._current_sound_obj = None
@@ -81,15 +89,52 @@ class AudioPlayer:
     def __contains__(self, item) -> bool:
         return item in self._queue[self._queue_progress_index + 1:]
 
+    @classmethod
+    def aliases(cls) -> dict:
+        """
+        Class-method to return the current state of the registered aliases
+        :return: dict
+        """
+        return cls._aliases.copy()
+
+    @classmethod
+    def register(cls, alias, value) -> None:
+        """
+        Class-method to register a sound object or a string as an easily accessible alias
+        :param alias: Alias to be used for the value
+        :param value: The value to be registered with the given alias
+        :return: None
+        """
+        cls._check_obj_type(value)
+        cls._aliases[alias] = value
+
+    @classmethod
+    def _check_obj_type(cls, obj) -> None:
+        """
+        Private class-method to check if an object is of the allowed types
+        :param obj: Object to be checked
+        :return: None
+        """
+        if not isinstance(obj, cls._ALLOWED_CLASSES):
+            raise TypeError(f"object can only be either {cls._ALLOWED_CLASSES!r}")
+
+    @classmethod
+    def get_alias(cls, alias, default_value=None):
+        """
+        Class-method to get a registered alias value
+        :param alias: Alias that is registered with the value
+        :param default_value: Value to return if the given alias could not be found
+        :return: Any
+        """
+        return cls._aliases.get(alias, default_value)
+
     def _update_pos_estimate(self, position: Union[int, float]) -> None:
         """
-        Private method to update the position estimate and its human-readable form
-        with the given position in seconds
+        Private method to update the position estimate with the given position in seconds
         :param position: New position of the current audio file in seconds
         :return: None
         """
         self._pos_estimate = position
-        self._human_readable_pos_estimate = human_readable_duration(self._pos_estimate)
 
     def _cancel_clock(self) -> None:
         """
@@ -149,17 +194,35 @@ class AudioPlayer:
             self._set_current_sound_obj()
         except IndexError:
             self._queue_progress_index = -1
+            self._current_sound_obj = None
             if self._loop:
-                self._set_current_sound_obj()
+                self.play()
 
-    def load(self, *args: Iterable[str]) -> None:
+    def clear_queue(self) -> None:
+        """
+        Method to clear what is in the queue
+        :return: None
+        """
+        self._queue.clear()
+
+    def load(self, *args: Union[str, Sound], clear_previous_queue: bool = False) -> None:
         """
         Method to add audio files to queue
         :param args: List of strings representing individual paths to audio files
+        or pre-initialized sound objects
+        :param clear_previous_queue: Clear whatever is in the queue before loading new files
         :return: None
         """
-        for audio_path in args:
-            sound_obj = SoundLoader.load(audio_path)
+        if clear_previous_queue:
+            self.clear_queue()
+        for audio_file in args:
+            found_alias = self.get_alias(audio_file)
+            if found_alias:
+                audio_file = found_alias
+            if isinstance(audio_file, str):
+                sound_obj = SoundLoader.load(audio_file)
+            else:
+                sound_obj = audio_file
             sound_obj.volume = self._volume
             sound_obj.bind(
                 on_play=lambda sound: self._initialize_estimation()
@@ -251,10 +314,12 @@ class AudioPlayer:
             self._update_pos_estimate(new_position)
 
     def skip_to_next(self,
+                     play_immediately: bool = True,
                      stop_current_playback: bool = True,
                      restart_audio_position: bool = True) -> None:
         """
         Method to load the next audio file in the queue
+        :param play_immediately: Whether to play the next track immediately or just load it
         :param stop_current_playback: Whether to call `self.stop` on the current audio file
         :param restart_audio_position: Whether to reset the position of the current audio file
         :return: None
@@ -264,13 +329,16 @@ class AudioPlayer:
         self._advance_in_queue()
         if restart_audio_position:
             self.seek(0)
-        self.play()
+        if play_immediately:
+            self.play()
 
     def skip_to_previous(self,
+                         play_immediately: bool = True,
                          stop_current_playback: bool = True,
                          restart_audio_position: bool = True) -> None:
         """
         Method to load the previous audio file in the queue
+        :param play_immediately: Whether to play the previous track immediately or just load it
         :param stop_current_playback: Whether to call `self.stop` on the current audio file
         :param restart_audio_position: Whether to reset the position of the current audio file
         :return: None
@@ -280,7 +348,8 @@ class AudioPlayer:
         self._advance_in_queue(-1)
         if restart_audio_position:
             self.seek(0)
-        self.play()
+        if play_immediately:
+            self.play()
 
     @property
     def queue_progress_index(self) -> int:
@@ -297,6 +366,10 @@ class AudioPlayer:
     @property
     def length(self) -> float:
         return self._current_sound_obj.length
+
+    @property
+    def human_readable_length(self) -> str:
+        return human_readable_duration(self.length)
 
     @property
     def volume(self) -> Union[int, float]:
@@ -318,4 +391,4 @@ class AudioPlayer:
 
     @property
     def human_readable_pos_estimate(self) -> str:
-        return self._human_readable_pos_estimate
+        return human_readable_duration(self._pos_estimate)

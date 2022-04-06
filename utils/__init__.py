@@ -2,6 +2,7 @@ import os
 import subprocess
 import json
 import webbrowser
+import random
 from typing import Callable, Union, Optional
 from constants import (
     GIGABYTE,
@@ -16,6 +17,8 @@ from kivy.logger import LoggerHistory
 
 __all__ = (
     "threaded",
+    "is_plural",
+    "shuffle",
     "move_index",
     "human_readable_size",
     "human_readable_duration",
@@ -43,15 +46,51 @@ def threaded(function: Callable):
     return _run_in_thread
 
 
+def is_plural(number: int) -> bool:
+    """
+    Convenience function to check if a number is plural or not
+    :param number: Given number to check if plural
+    :return: bool
+    """
+    return number == 0 or number > 1
+
+
+def shuffle(list_obj: list, return_copy: bool = True) -> Optional[list]:
+    """
+    Convenience function to shuffle a list, whether in-place or as a copied list
+    :param list_obj: The list instance to operate on
+    :param return_copy: Return the shuffled songs as a copied list or shuffle in-place
+    :return: Optional[list]
+    """
+    if return_copy:
+        songs_copy = list_obj.copy()
+        random.shuffle(songs_copy)
+        return songs_copy
+    else:
+        random.shuffle(list_obj)
+
+
 def move_index(list_obj: list, element_index: int, target_index: int) -> None:
     """
-    Convenience function to move and element within a list
-    :param list_obj: The list instance
-    :param element_index: The index of the current element
-    :param target_index: The target index to be moved to
+    Convenience function to move an element within a list
+    :param list_obj: The list instance to operate on
+    :param element_index: The index of the current element to be moved
+    :param target_index: The target index to move to
     :return: None
     """
     list_obj.insert(target_index, list_obj.pop(element_index))
+
+
+def replace_index(list_obj: list, element_index: int, replacement_value) -> None:
+    """
+    Convenience function to replace an index's element with another value
+    :param list_obj: The list instance to operate on
+    :param element_index: The index of the element to be replaced
+    :param replacement_value: Value to be put in place of the given index
+    :return: None
+    """
+    list_obj.pop(element_index)
+    list_obj.insert(element_index, replacement_value)
 
 
 def human_readable_size(size_in_bytes: Union[int, float], rounding_point: int = 2) -> str:
