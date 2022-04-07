@@ -13,7 +13,7 @@ class AudioMetadata:
     """
     __slots__ = (
         "_source",
-        "_metadata",
+        "_core_metadata",
         "_title",
         "_album",
         "_artist",
@@ -52,17 +52,17 @@ class AudioMetadata:
 
     def __init__(self, source: Union[str, Path]) -> None:
         self._source = str(source)
-        self._metadata = stagger.read_tag(self._source)
-        self._title = self._metadata.title if self._metadata.title else self.default_title
-        self._album = self._metadata.album if self._metadata.album else self.default_album
-        self._artist = self._metadata.artist if self._metadata.artist else self.default_artist
-        self._genre = self._metadata.genre if self._metadata.genre else self.default_genre
+        self._core_metadata = stagger.read_tag(self._source)
+        self._title = self._core_metadata.title if self._core_metadata.title else self.default_title
+        self._album = self._core_metadata.album if self._core_metadata.album else self.default_album
+        self._artist = self._core_metadata.artist if self._core_metadata.artist else self.default_artist
+        self._genre = self._core_metadata.genre if self._core_metadata.genre else self.default_genre
         try:
-            self._lyrics = self._metadata[stagger.id3.USLT][0].text
+            self._lyrics = self._core_metadata[stagger.id3.USLT][0].text
         except KeyError:
             self._lyrics = self.default_lyrics
         try:
-            self._cover = self._metadata[stagger.id3.APIC][0].data
+            self._cover = self._core_metadata[stagger.id3.APIC][0].data
         except KeyError:
             self._cover = self.default_cover
 
@@ -86,17 +86,17 @@ class AudioMetadata:
         Method to re-extract the tags of the already given source path (`self._source`)
         :return: None
         """
-        self._metadata = stagger.read_tag(self._source)
-        self._title = self._metadata.title if self._metadata.title else self.default_title
-        self._album = self._metadata.album if self._metadata.album else self.default_album
-        self._artist = self._metadata.artist if self._metadata.artist else self.default_artist
-        self._genre = self._metadata.genre if self._metadata.genre else self.default_genre
+        self._core_metadata = stagger.read_tag(self._source)
+        self._title = self._core_metadata.title if self._core_metadata.title else self.default_title
+        self._album = self._core_metadata.album if self._core_metadata.album else self.default_album
+        self._artist = self._core_metadata.artist if self._core_metadata.artist else self.default_artist
+        self._genre = self._core_metadata.genre if self._core_metadata.genre else self.default_genre
         try:
-            self._lyrics = self._metadata[stagger.id3.USLT][0].text
+            self._lyrics = self._core_metadata[stagger.id3.USLT][0].text
         except KeyError:
             self._lyrics = self.default_lyrics
         try:
-            self._cover = self._metadata[stagger.id3.APIC][0].data
+            self._cover = self._core_metadata[stagger.id3.APIC][0].data
         except KeyError:
             self._cover = self.default_cover
 
@@ -112,10 +112,10 @@ class AudioMetadata:
         self.update_fetched_tags()
 
     @property
-    def metadata(self):
+    def core_metadata(self):
         # You still have access to the internally used metadata
         # In case you wanted to view the raw data without changes applied to it
-        return self._metadata
+        return self._core_metadata
 
     @property
     def title(self):

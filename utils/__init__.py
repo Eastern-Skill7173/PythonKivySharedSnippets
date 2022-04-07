@@ -20,6 +20,7 @@ __all__ = (
     "is_plural",
     "shuffle",
     "move_index",
+    "replace_index",
     "human_readable_size",
     "human_readable_duration",
     "get_logger_history",
@@ -59,13 +60,13 @@ def shuffle(list_obj: list, return_copy: bool = True) -> Optional[list]:
     """
     Convenience function to shuffle a list, whether in-place or as a copied list
     :param list_obj: The list instance to operate on
-    :param return_copy: Return the shuffled songs as a copied list or shuffle in-place
+    :param return_copy: Return copy or shuffle in-place
     :return: Optional[list]
     """
     if return_copy:
-        songs_copy = list_obj.copy()
-        random.shuffle(songs_copy)
-        return songs_copy
+        list_copy = list_obj.copy()
+        random.shuffle(list_copy)
+        return list_copy
     else:
         random.shuffle(list_obj)
 

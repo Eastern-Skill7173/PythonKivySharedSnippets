@@ -92,7 +92,7 @@ class AudioPlayer:
     @classmethod
     def aliases(cls) -> dict:
         """
-        Class-method to return the current state of the registered aliases
+        Class-method to return the currently registered aliases
         :return: dict
         """
         return cls._aliases.copy()
@@ -205,20 +205,25 @@ class AudioPlayer:
         """
         self._queue.clear()
 
-    def load(self, *args: Union[str, Sound], clear_previous_queue: bool = False) -> None:
+    def load(self,
+             *args: Union[str, Sound],
+             clear_previous_queue: bool = False,
+             ignore_aliases: bool = False) -> None:
         """
         Method to add audio files to queue
         :param args: List of strings representing individual paths to audio files
         or pre-initialized sound objects
         :param clear_previous_queue: Clear whatever is in the queue before loading new files
+        :param ignore_aliases: Whether to avoid fetching given values from registered aliases
         :return: None
         """
         if clear_previous_queue:
             self.clear_queue()
         for audio_file in args:
-            found_alias = self.get_alias(audio_file)
-            if found_alias:
-                audio_file = found_alias
+            if not ignore_aliases:
+                found_alias = self.get_alias(audio_file)
+                if found_alias:
+                    audio_file = found_alias
             if isinstance(audio_file, str):
                 sound_obj = SoundLoader.load(audio_file)
             else:

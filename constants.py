@@ -7,6 +7,7 @@ __all__ = (
     "PROJECT_GITHUB_URL",
     "STARTUP_WIDTH",
     "STARTUP_HEIGHT",
+    "AUDIO_PROVIDER",
     "UIX_DIRECTORY",
     "IMAGES_DIRECTORY",
     "MUSIC_DIRECTORY",
@@ -36,6 +37,7 @@ AUTHOR_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173"
 PROJECT_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173/SharedSnippets"
 STARTUP_WIDTH: Final = "800"
 STARTUP_HEIGHT: Final = "600"
+AUDIO_PROVIDER: Final = "ffpyplayer"
 # Be used with `os.path.join(...)`
 UIX_DIRECTORY: Final = "uix"
 IMAGES_DIRECTORY: Final = "images"
