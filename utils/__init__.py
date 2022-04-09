@@ -13,6 +13,7 @@ from constants import (
 )
 from threading import Thread
 from kivy import platform
+from kivy.animation import Animation
 from kivy.logger import LoggerHistory
 
 __all__ = (
@@ -23,6 +24,9 @@ __all__ = (
     "replace_index",
     "human_readable_size",
     "human_readable_duration",
+    "update_animation_duration",
+    "update_animation_transition",
+    "update_animation_properties",
     "get_logger_history",
     "read_json_file",
     "write_to_json_file",
@@ -130,6 +134,50 @@ def human_readable_duration(seconds: Union[int, float]) -> str:
     else:
         string_converted_duration = f"0:{int(seconds):02d}"
     return string_converted_duration
+
+
+def update_animation_duration(animation_obj: Animation, new_duration: Union[int, float]) -> None:
+    """
+    Convenience function to update an `Animation` object's duration
+    :param animation_obj: The `Animation` object to be updated
+    :param new_duration: New duration to be set for the animation
+    :return: None
+    """
+    super(animation_obj.__class__, animation_obj).__init__(
+        duration=new_duration,
+        transition=animation_obj.transition,
+        **animation_obj.animated_properties
+    )
+
+
+def update_animation_transition(animation_obj: Animation, new_transition: str) -> None:
+    """
+    Convenience function to update an `Animation` object's transition
+    :param animation_obj: The `Animation` object to be updated
+    :param new_transition: New transition to be set for the animation
+    :return: None
+    """
+    super(animation_obj.__class__, animation_obj).__init__(
+        duration=animation_obj.duration,
+        transition=new_transition,
+        **animation_obj.animated_properties
+    )
+
+
+def update_animation_properties(
+        animation_obj: Animation,
+        clear_previous_items: bool = False,
+        **kwargs) -> None:
+    """
+    Convenience function to update an `Animation` object's animated properties
+    :param animation_obj: The `Animation` object to be updated
+    :param clear_previous_items: Whether to clear the existing properties before updating
+    :param kwargs: List of keyword arguments to update the animated properties
+    :return: None
+    """
+    if clear_previous_items:
+        animation_obj.animated_properties.clear()
+    animation_obj.animated_properties.update(kwargs)
 
 
 def get_logger_history() -> str:

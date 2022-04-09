@@ -76,16 +76,15 @@ class Playlist:
             raise ValueError(f"name {name!r} already has been used for another playlist")
 
     @classmethod
-    def _check_object_class(cls, *args) -> None:
+    def _check_obj_type(cls, obj) -> None:
         """
-        Class-method to check that arguments are of the allowed types
-        :param args: List of initialized objects to check against allowed classes
+        Class-method to check that given object is of the allowed types
+        :param obj: Object to check against allowed classes
         :return: None
         """
-        for obj in args:
-            # `is_instance` only accepts tuples
-            if not isinstance(obj, tuple(cls.allowed_classes)):
-                raise TypeError(f"only {cls.allowed_classes} are allowed")
+        # `is_instance` only accepts tuples
+        if not isinstance(obj, tuple(cls.allowed_classes)):
+            raise TypeError(f"only {cls.allowed_classes} are allowed")
 
     @classmethod
     def _update_used_names(cls, name: str) -> None:
@@ -111,7 +110,8 @@ class Playlist:
         :param args: List of string or sound objects to be added to playlist
         :return: None
         """
-        self._check_object_class(*args)
+        for obj in args:
+            self._check_obj_type(obj)
         self._songs.extend(args)
 
     def pop(self, *args: int) -> None:
