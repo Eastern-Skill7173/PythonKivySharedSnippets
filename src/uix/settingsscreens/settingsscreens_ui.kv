@@ -1,0 +1,133 @@
+#:kivy 2.1.0
+#:import TYPOGRAPHY src.uix.TYPOGRAPHY
+#:import ICON_PATH src.constants.app_info.ICON_PATH
+#:import AUTHOR_GITHUB_URL src.constants.AUTHOR_GITHUB_URL
+#:import platform kivy.utils.platform
+#:import get_hex_from_color kivy.utils.get_hex_from_color
+#:import open_link src.utils.open_link
+<LogLayout>:
+    orientation: "vertical"
+    spacing: "15dp"
+    padding: ("10dp", "10dp", "15dp", "10dp")
+    size_hint_y: None
+    height: root.minimum_height
+    Label:
+        text:
+            "The Log tab shows a history of the program's states (the last 100 reports). " \
+            "If you experience any bugs or unexpected behavior, you could learn more by " \
+            "looking at the log, or sending the log to us for improvements in future versions."
+        font_size: TYPOGRAPHY["secondary-label"]
+        text_size: self.width, None
+        halign: "left"
+        size_hint_y: None
+        height: self.texture_size[1]
+    Button:
+        text: "SAVE CHANGES"
+        size_hint: (None, None)
+        size: self.texture_size
+        on_release:
+            root.dispatch("on_save_changes", self)
+    Button:
+        text: "SAVE LOG"
+        size_hint: (None, None)
+        size: self.texture_size
+        on_release:
+            root.dispatch("on_save_log", self)
+    TextInput:
+        text: root.logger_history
+        font_size: TYPOGRAPHY["secondary-label"]
+        multiline: True
+        readonly: True
+        size_hint_y: None
+        height: self.minimum_height
+    Label:
+        markup: True
+        text:
+            f"[color={get_hex_from_color(root.warning_note_color)}]NOTE:[/color] " \
+            f"By default the program saves your data when it is closed, " \
+            f"although to ensure that the changes are applied on all platforms " \
+            f"it is better to save them manually."
+        font_size: TYPOGRAPHY["secondary-label"]
+        text_size: self.width, None
+        halign: "left"
+        size_hint_y: None
+        height: self.texture_size[1]
+    Label:
+        markup: True
+        text:
+            f"[color={get_hex_from_color(root.warning_note_color)}]NOTE:[/color] " \
+            f"By default the program writes the log to the application directory under " \
+            f"[i][b]USER_HOME_DIR/.kivy/logs/kivy_YEAR-MONTH-DAY_SESSION.txt[/b][/i]"
+        font_size: TYPOGRAPHY["secondary-label"]
+        text_size: self.width, None
+        halign: "left"
+        size_hint_y: None
+        height: self.texture_size[1]
+<InfoLayout>:
+    orientation: "vertical"
+    padding: "10dp"
+    spacing: "10dp"
+    size_hint_y: None
+    height: root.minimum_height
+    BoxLayout:
+        spacing: "10dp"
+        size_hint_y: None
+        height: self.minimum_height
+        AsyncImage:
+            source: ICON_PATH
+            size_hint: (None, None)
+            size: ("128dp", "128dp")
+            allow_stretch: True
+            pos_hint: {"center_y": .5}
+        BoxLayout:
+            orientation: "vertical"
+            spacing: "5dp"
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_y": .5}
+            Label:
+                text: f"{root.application_name}".upper()
+                font_size: TYPOGRAPHY["app-name-label"]
+                text_size: self.size
+                halign: "left"
+                bold: True
+                shorten: True
+                shorten_from: "right"
+                size_hint_y: None
+                height: self.texture_size[1]
+            Label:
+                markup: True
+                text:
+                    f"MADE BY: [ref={AUTHOR_GITHUB_URL}]" \
+                    f"[color=#ADD8E6][u]@EASTERN-SKILL7173[/color][/u][/ref]"
+                font_size: TYPOGRAPHY["secondary-label"]
+                text_size: self.size
+                halign: "left"
+                bold: True
+                shorten: True
+                shorten_from: "right"
+                size_hint_y: None
+                height: self.texture_size[1]
+                on_ref_press:
+                    open_link(args[1])
+            Label:
+                text: f"VERSION: {root.software_version}"
+                font_size: TYPOGRAPHY["secondary-label"]
+                text_size: self.size
+                halign: "left"
+                bold: True
+                shorten: True
+                shorten_from: "right"
+                size_hint_y: None
+                height: self.texture_size[1]
+            Label:
+                text: f"PLATFORM: {platform.upper()}"
+                font_size: TYPOGRAPHY["secondary-label"]
+                text_size: self.size
+                halign: "left"
+                bold: True
+                shorten: True
+                shorten_from: "right"
+                size_hint_y: None
+                height: self.texture_size[1]
+    Separator:
