@@ -11,6 +11,7 @@ from constants import (
     HOUR,
     MINUTE,
 )
+from pathlib import Path
 from threading import Thread
 from kivy import platform
 from kivy.animation import Animation
@@ -265,13 +266,14 @@ def open_link(link: str, new: int = 2, auto_raise: bool = True) -> None:
     webbrowser.open(link, new=new, autoraise=auto_raise)
 
 
-def open_file(file_path: str) -> None:
+def open_file(file_path: Union[str, Path]) -> None:
     """
     Convenience function to open the given file path with the default program
     across all `Linux`, `OSX`, `Windows`
     :param file_path: Path to the file to be opened
     :return: None
     """
+    file_path = str(file_path)
     if platform == "win":
         os.startfile(file_path)
     elif platform == "macosx":
