@@ -67,7 +67,7 @@ class AudioMetadata:
             self._cover = self.default_cover
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(source={self._source!r})"
+        return f"{type(self).__name__}(source={self._source!r})"
 
     def apply_defaults(self) -> None:
         """

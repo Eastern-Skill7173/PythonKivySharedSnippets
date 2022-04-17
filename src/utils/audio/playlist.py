@@ -32,7 +32,7 @@ class Playlist:
         self.add(*args)
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(name={self._name!r}, length={self.__len__()})"
+        return f"{type(self).__name__}(name={self._name!r}, length={self.__len__()})"
 
     def __contains__(self, item) -> bool:
         return item in self._songs

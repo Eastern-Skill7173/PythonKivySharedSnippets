@@ -1,3 +1,9 @@
+"""
+Module is still a work in progress
+For now it is recommended to not use this module
+"""
+
+
 import os
 from typing import Iterable, Union, Final
 from kivy.utils import platform
@@ -73,7 +79,7 @@ class AudioPlayer:
         self._current_sound_obj = None
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(" \
+        return f"{type(self).__name__}(" \
                f"remaining_in_queue={self.__len__()!r}, " \
                f"loop={self._loop!r}, " \
                f"estimate_position={self._estimate_position!r}, " \

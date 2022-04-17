@@ -59,7 +59,7 @@ class ExtendedAnimation(Animation):
         )
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(" \
+        return f"{type(self).__name__}(" \
                f"duration={self._duration!r}, " \
                f"transition={self._transition!r}, " \
                f"animated_properties={self.animated_properties!r})"
@@ -69,7 +69,7 @@ class ExtendedAnimation(Animation):
         Method to return a new `ExtendedAnimation` instance with the same values
         :return: ExtendedAnimation
         """
-        return self.__class__(self._duration, self._transition, **self._animated_properties)
+        return type(self)(self._duration, self._transition, **self._animated_properties)
 
     def update_animated_properties(self, **kwargs):
         """

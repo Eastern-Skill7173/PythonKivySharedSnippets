@@ -15,14 +15,14 @@ class SelectableRecycleBoxLayout(LayoutSelectionBehavior, RecycleBoxLayout):
     """Recycle box layout with layout selection behavior."""
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(selected_nodes={len(self.selected_nodes)})"
+        return f"{type(self).__name__}(selected_nodes={len(self.selected_nodes)})"
 
 
 class SelectableRecycleGridLayout(LayoutSelectionBehavior, RecycleGridLayout):
     """Recycle grid layout with layout selection behavior."""
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(selected_nodes={len(self.selected_nodes)})"
+        return f"{type(self).__name__}(selected_nodes={len(self.selected_nodes)})"
 
 
 Builder.load_file(

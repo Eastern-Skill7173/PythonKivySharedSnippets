@@ -52,7 +52,7 @@ class NavigationRailItem(ButtonBehavior, BoxLayout):
         self._screen = Screen()
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(icon={self.icon!r}, text={self.text!r}, selected={self.selected!r})"
+        return f"{type(self).__name__}(icon={self.icon!r}, text={self.text!r}, selected={self.selected!r})"
 
     def on_release(self):
         self.parent.selected_nav_item = self
