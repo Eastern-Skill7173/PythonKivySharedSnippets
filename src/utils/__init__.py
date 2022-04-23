@@ -2,14 +2,21 @@ import os
 import subprocess
 import json
 import webbrowser
+import re
 import random
-from typing import Callable, Union, Optional
+from typing import (
+    Callable,
+    Optional,
+    Iterable,
+    Dict,
+    Any,
+)
+from src.type_aliases import Number, FilePath
 from src.constants.measurement_units import (
     SIUnitsPrefixes,
     HOUR,
     MINUTE,
 )
-from pathlib import Path
 from threading import Thread
 from kivy import platform
 from kivy.animation import Animation
@@ -21,6 +28,9 @@ __all__ = (
     "shuffle",
     "move_index",
     "replace_index",
+    "validate_url",
+    "matched_prefix",
+    "matched_prefix_dict",
     "human_readable_size",
     "human_readable_duration",
     "update_animation_duration",
@@ -97,7 +107,54 @@ def replace_index(list_obj: list, element_index: int, replacement_value) -> None
     list_obj.insert(element_index, replacement_value)
 
 
-def human_readable_size(size_in_bytes: Union[int, float], rounding_point: int = 2) -> str:
+def validate_url(url: str) -> bool:
+    """
+    Convenience function to check whether the given URL is valid or not. (regex validation)
+    :param url: URL to check validation
+    :return: bool
+    """
+    print(re.search(r"[^a-zA-Z]|\d|[^\-._~:/?#[]@!\$&'\(\)\*+,;=]", url))
+    return url.startswith(
+        ("http://", "https://")
+    ) and ' ' not in url
+
+
+def matched_prefix(string: str, prefixes: Iterable[str], default_value=None) -> Optional[str]:
+    """
+    Convenience function to check which of the given prefixes matches the string first.
+    If none of them do, the `default_value` is returned
+    :param string: String to be matched against
+    :param prefixes: Iterable of prefixes to match to the string
+    :param default_value: Default value to return if none of the prefixes match the string
+    :return: Optional[str]
+    """
+    found_matched_prefix = default_value
+    for prefix in prefixes:
+        if string.startswith(prefix):
+            found_matched_prefix = prefix
+            break
+    return found_matched_prefix
+
+
+def matched_prefix_dict(string: str, prefix_dicts: Dict[str, Any], default_value=None) -> Optional[Any]:
+    """
+    Convenience function to check which of the given prefixes matches the string first,
+    then return the value of the same key in the dictionary. If none of them do,
+    the `default_value` is returned
+    :param string: String to be matched against
+    :param prefix_dicts: Dictionary of prefixes to match to the string
+    :param default_value: Default value to return if none of the prefixes match the string
+    :return: Optional[Any]
+    """
+    found_matched_prefix = default_value
+    for prefix, value in prefix_dicts.items():
+        if string.startswith(prefix):
+            found_matched_prefix = value
+            break
+    return found_matched_prefix
+
+
+def human_readable_size(size_in_bytes: Number, rounding_point: int = 2) -> str:
     """
     Convenience function to convert size in bytes to a human-readable form
     :param size_in_bytes: Size of a file or object in bytes
@@ -115,7 +172,7 @@ def human_readable_size(size_in_bytes: Union[int, float], rounding_point: int = 
     return string_converted_size
 
 
-def human_readable_duration(seconds: Union[int, float]) -> str:
+def human_readable_duration(seconds: Number) -> str:
     """
     Convenience function to convert duration of an audio file in seconds to a human-readable form.
     :param seconds: Length of an audio file in seconds
@@ -135,14 +192,14 @@ def human_readable_duration(seconds: Union[int, float]) -> str:
     return string_converted_duration
 
 
-def update_animation_duration(animation_obj: Animation, new_duration: Union[int, float]) -> None:
+def update_animation_duration(animation_obj: Animation, new_duration: Number) -> None:
     """
     Convenience function to update an `Animation` object's duration
     :param animation_obj: The `Animation` object to be updated
     :param new_duration: New duration to be set for the animation
     :return: None
     """
-    super(animation_obj.__class__, animation_obj).__init__(
+    super(type(animation_obj), animation_obj).__init__(
         duration=new_duration,
         transition=animation_obj.transition,
         **animation_obj.animated_properties
@@ -156,7 +213,7 @@ def update_animation_transition(animation_obj: Animation, new_transition: str) -
     :param new_transition: New transition to be set for the animation
     :return: None
     """
-    super(animation_obj.__class__, animation_obj).__init__(
+    super(type(animation_obj), animation_obj).__init__(
         duration=animation_obj.duration,
         transition=new_transition,
         **animation_obj.animated_properties
@@ -264,7 +321,7 @@ def open_link(link: str, new: int = 2, auto_raise: bool = True) -> None:
     webbrowser.open(link, new=new, autoraise=auto_raise)
 
 
-def open_file(file_path: Union[str, Path]) -> None:
+def open_file(file_path: FilePath) -> None:
     """
     Convenience function to open the given file path with the default program
     across all `Linux`, `OSX`, `Windows`

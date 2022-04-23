@@ -1,6 +1,6 @@
 import os.path
-from typing import Final
 from src.constants.app_info import UIX_DIRECTORY
+from src.constants.uix import RAIL_ITEM_HOLDER_DEFAULT_WIDTH
 from kivy.lang import Builder
 from kivy.properties import (
     StringProperty,
@@ -20,8 +20,6 @@ __all__ = (
     "NavigationRailItem",
     "NavigationRail",
 )
-
-_DEFAULT_RAIL_SIZE: Final = "90dp"
 
 
 class NavigationRailItem(ButtonBehavior, BoxLayout):
@@ -89,7 +87,7 @@ class RailItemHolder(RectangularElevationBehavior, GridLayout):
     :attr:`selected_nav_item` is a :class:`~kivy.properties.ObjectProperty`
     and defaults to `None`.
     """
-    width = NumericProperty(_DEFAULT_RAIL_SIZE)
+    width = NumericProperty(RAIL_ITEM_HOLDER_DEFAULT_WIDTH)
 
     def __init__(self, **kwargs):
         super(RailItemHolder, self).__init__(**kwargs)
@@ -125,7 +123,7 @@ class RailItemHolder(RectangularElevationBehavior, GridLayout):
 
 
 class NavigationRail(BoxLayout):
-    rail_width = NumericProperty(_DEFAULT_RAIL_SIZE)
+    rail_width = NumericProperty(RAIL_ITEM_HOLDER_DEFAULT_WIDTH)
     """
     Width of the side rail.
     

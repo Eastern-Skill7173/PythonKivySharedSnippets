@@ -48,9 +48,6 @@ class Playlist:
         return self._songs.__getitem__(item)
 
     def __del__(self):
-        """
-        Remove the playlist's used name when deleted
-        """
         self._used_names.remove(self._name)
 
     @classmethod

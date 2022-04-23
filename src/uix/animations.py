@@ -4,8 +4,9 @@ For now it is recommended to not use this module
 """
 
 
-from typing import Final, Union, Type
-from src.constants.animation import (
+from typing import Final, Type
+from src.type_aliases import Number
+from src.constants.uix import (
     SNAP_ANIM_DURATION,
     QUICK_ANIM_DURATION,
     SLOW_ANIM_DURATION,
@@ -48,7 +49,7 @@ class ExtendedAnimation(Animation):
     allows setting new values for `duration`, `transition`, and `animated_properties` post-initialization.
     """
 
-    def __init__(self, duration: Union[int, float] = 1, transition: str = "linear", **kwargs):
+    def __init__(self, duration: Number = 1, transition: str = "linear", **kwargs):
         self._duration = duration
         self._transition = transition
         self._animated_properties = kwargs
@@ -80,16 +81,16 @@ class ExtendedAnimation(Animation):
         update_animation_properties(self, **kwargs)
 
     @property
-    def duration(self):
+    def duration(self) -> Number:
         return self._duration
 
     @duration.setter
-    def duration(self, new_duration: Union[int, float]) -> None:
+    def duration(self, new_duration: Number) -> None:
         self._duration = new_duration
         update_animation_duration(self, self._duration)
 
     @property
-    def transition(self):
+    def transition(self) -> str:
         return self._transition
 
     @transition.setter
@@ -111,7 +112,7 @@ class _BaseAnimContainer:
     Base class for animation containers (`SnapAnimations`, `QuickAnimation`, ...).
     Class is NOT meant to be used on its own
     """
-    global_anim_speed = -1
+    global_anim_speed: Number = -1
     """
     Global speed for contained animations to be follow.
     Variable is meant to be overwritten only within sub-classes
