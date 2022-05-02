@@ -6,6 +6,7 @@ For now it is recommended to not use this module
 
 import os
 from typing import Iterable, Union, Final
+from src.type_aliases import Number
 from kivy.utils import platform
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader, Sound
@@ -17,23 +18,38 @@ __all__ = (
 
 
 # TODO: integrate player with windows and linux as well
-if platform == "android" and os.getenv("ANDROID_PLAYER_INTEGRATION"):
-    from _android_player_integration import AndroidSoundPlayer
-    SoundLoader.register(AndroidSoundPlayer)
-    """
-    In order to utilize android's native media player, before importing the module you
-    must set the "ANDROID_PLAYER_INTEGRATION" environmental variable to "True".
-    like so:
-    
-        import os
-        
-        os.environ["ANDROID_PLAYER_INTEGRATION"] = "True"
-        
-        # You must do this before importing the audio player module
-        
-        from utils.audioplayer import AudioPlayer
-        ...
-    """
+if platform in os.getenv("PLATFORM_AUDIO_PLAYER_INTEGRATION", '').split(','):
+    if platform == "android":
+        from _android_player_integration import AndroidSoundPlayer
+        SoundLoader.register(AndroidSoundPlayer)
+    elif platform == "linux":
+        from _linux_player_integration import LinuxSoundPlayer
+        SoundLoader.register(LinuxSoundPlayer)
+    elif platform == "win":
+        from _windows_player_integration import WindowsSoundPlayer
+        SoundLoader.register(WindowsSoundPlayer)
+"""
+In order to integrate and utilize every platform's native media player,
+before importing the module you must set the "PLATFORM_AUDIO_PLAYER_INTEGRATION"
+environmental variable to a list of platforms separated with a comma.
+As an example, to integrate the player with android and windows:
+
+    import os
+
+    os.environ["PLATFORM_AUDIO_PLAYER_INTEGRATION"] = "android,windows"
+
+    # You must do this before importing the audio player module
+
+    from utils.audioplayer import AudioPlayer
+    ...
+
+Currently supported platforms are:
+    android: `android`
+
+Soon to be integrated:
+    windows: `win`
+    linux: `linux`
+"""
 
 
 class AudioPlayer:
@@ -61,10 +77,10 @@ class AudioPlayer:
 
     def __init__(self,
                  queue: Iterable = (),
-                 volume: Union[int, float] = 1,
+                 volume: Number = 1,
                  loop: bool = False,
                  estimate_position: bool = True,
-                 interval: Union[int, float] = 1):
+                 interval: Number = 1):
         self._external_stop_call = False
         self._queue_progress_index = -1
         self._queue = []
@@ -134,7 +150,15 @@ class AudioPlayer:
         """
         return cls._aliases.get(alias, default_value)
 
-    def _update_pos_estimate(self, position: Union[int, float]) -> None:
+    def _normalize_index(self, index: int) -> int:
+        """
+        Private method to convert a reverse index to a standard one
+        :param index: Index to be checked then converted
+        :return: int
+        """
+        return len(self._queue) + index if index < 0 else index
+
+    def _update_pos_estimate(self, position: Number) -> None:
         """
         Private method to update the position estimate with the given position in seconds
         :param position: New position of the current audio file in seconds
@@ -189,14 +213,14 @@ class AudioPlayer:
         """
         self._current_sound_obj = self._queue[self._queue_progress_index]
 
-    def _advance_in_queue(self, index_jump: int = 1) -> None:
+    def _jump_to_index(self, index: int) -> None:
         """
-        Method to progress in queue with the given index jump
-        :param index_jump: Number of indexes to progress within the queue
+        Method to jump to the given index in the queue
+        :param index: Index of the queue to jump to
         :return: None
         """
         try:
-            self._queue_progress_index += index_jump
+            self._queue_progress_index = index
             self._set_current_sound_obj()
         except IndexError:
             self._queue_progress_index = -1
@@ -262,7 +286,7 @@ class AudioPlayer:
         :return: None
         """
         if not self._current_sound_obj:
-            self._advance_in_queue()
+            self._jump_to_index(0)
         self._current_sound_obj.play()
         self._state = "play"
 
@@ -278,14 +302,14 @@ class AudioPlayer:
         self._state = "stop"
         self._external_stop_call = False
 
-    def get_pos(self) -> Union[int, float]:
+    def get_pos(self) -> Number:
         """
         Method to get the position of the current audio file
-        :return: Union[int, float]
+        :return: Number
         """
         return self._current_sound_obj.get_pos()
 
-    def seek(self, position: Union[int, float]) -> None:
+    def seek(self, position: Number) -> None:
         """
         Method to jump to the given position in the current audio file
         :param position: Position to jump to in seconds
@@ -293,7 +317,7 @@ class AudioPlayer:
         """
         self._current_sound_obj.seek(position)
 
-    def fast_forward(self, seconds: Union[int, float] = 10) -> None:
+    def fast_forward(self, seconds: Number = 10) -> None:
         """
         Method to skip the next given seconds in the current audio file
         :param seconds: Jump/Skip duration in seconds
@@ -309,7 +333,7 @@ class AudioPlayer:
         if self._estimate_position:
             self._update_pos_estimate(new_position)
 
-    def rewind(self, seconds: Union[int, float] = 10) -> None:
+    def rewind(self, seconds: Number = 10) -> None:
         """
         Method to go back in the next given seconds in the current audio file
         :param seconds: Duration to rewind/jump back to in seconds
@@ -337,7 +361,7 @@ class AudioPlayer:
         """
         if stop_current_playback:
             self.stop()
-        self._advance_in_queue()
+        self._jump_to_index(self._queue_progress_index + 1)
         if restart_audio_position:
             self.seek(0)
         if play_immediately:
@@ -356,7 +380,9 @@ class AudioPlayer:
         """
         if stop_current_playback:
             self.stop()
-        self._advance_in_queue(-1)
+        self._jump_to_index(
+            self._normalize_index(self._queue_progress_index - 1)
+        )
         if restart_audio_position:
             self.seek(0)
         if play_immediately:
@@ -383,11 +409,11 @@ class AudioPlayer:
         return human_readable_duration(self.length)
 
     @property
-    def volume(self) -> Union[int, float]:
+    def volume(self) -> Number:
         return self._volume
 
     @volume.setter
-    def volume(self, new_volume: Union[int, float]) -> None:
+    def volume(self, new_volume: Number) -> None:
         if not isinstance(new_volume, (int, float)):
             raise TypeError("volume can only be an instance of int or float")
         if 0 > new_volume > 1:
@@ -397,7 +423,7 @@ class AudioPlayer:
             sound_obj.volume = self._volume
 
     @property
-    def pos_estimate(self) -> Union[int, float]:
+    def pos_estimate(self) -> Number:
         return self._pos_estimate
 
     @property
