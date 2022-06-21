@@ -1,10 +1,16 @@
 """
 Module is still a work in progress
-For now it is recommended to not use this module
+For now it is recommended NOT to use this module
 """
 
 
-from typing import Final, Type
+from typing import (
+    Final,
+    Type,
+    Union,
+    Dict,
+    Any,
+)
 from src.type_aliases import Number
 from src.constants.uix import (
     SNAP_ANIM_DURATION,
@@ -26,13 +32,13 @@ from src.utils import (
 )
 
 __all__ = (
-    "SNAP_ANIM_DURATION",
-    "QUICK_ANIM_DURATION",
-    "SLOW_ANIM_DURATION",
     "ExtendedAnimation",
+    "BaseAnimContainer",
     "SnapAnimations",
     "QuickAnimations",
     "SlowAnimations",
+    "register_default_animations",
+    "register_default_transitions",
 )
 
 
@@ -41,6 +47,38 @@ _fade_in_properties = {"opacity": 1}
 _fade_out_properties = {"opacity": 0}
 _primary_color_properties = {"color": _main_app_theme_cls.primary_color}
 _opposite_bg_darkest_color_properties = {"color": _main_app_theme_cls.opposite_bg_darkest}
+
+
+def _check_anim_type(anim_obj: Animation) -> None:
+    """
+    Private function to check if the given object is of Animation
+    :param anim_obj: Object to check the type
+    :return: None
+    """
+    if not isinstance(anim_obj, Animation):
+        raise TypeError("only instances of Animation are accepted")
+
+
+def _check_anim_duration(duration: Number) -> None:
+    """
+    Private function to check if a given duration is of `int` or `float` and is bigger than zero
+    :param duration: The duration to apply the checks
+    :return: None
+    """
+    if not isinstance(duration, (int, float)):
+        raise TypeError("animation duration can only be an int or a float")
+    if duration <= 0:
+        raise ValueError("animation duration speed must be more than zero")
+
+
+def _check_transition_class(transition_class: Type[TransitionBase]) -> None:
+    """
+    Private function to check if the given transition is a subclass of `TransitionBase`
+    :param transition_class: Transition class to check
+    :return: None
+    """
+    if not issubclass(transition_class, TransitionBase):
+        raise TypeError(f"{transition_class} is not a sub-class of TransitionBase")
 
 
 class ExtendedAnimation(Animation):
@@ -107,131 +145,100 @@ class ExtendedAnimation(Animation):
         update_animation_properties(self, clear_previous_items=True, **new_animated_properties)
 
 
-class _BaseAnimContainer:
+class BaseAnimContainer:
     """
     Base class for animation containers (`SnapAnimations`, `QuickAnimation`, ...).
-    Class is NOT meant to be used on its own
-    """
-    global_anim_speed: Number = -1
-    """
-    Global speed for contained animations to be follow.
-    Variable is meant to be overwritten only within sub-classes
-    and outside of the class should be read-only.
     """
 
-    @staticmethod
-    def _check_obj_type(obj) -> None:
-        """
-        Static-method to check if the given object is of `Animation`
-        :param obj: Object to check the type
-        :return: None
-        """
-        if not isinstance(obj, Animation):
-            raise TypeError("only instances of Animation are accepted")
+    def __init__(self, global_anim_speed: Number):
+        _check_anim_duration(global_anim_speed)
+        self._global_anim_speed = global_anim_speed
 
-    @staticmethod
-    def _check_transition_class(transition_class) -> None:
+    def _convert_registration_values_to_anim_objs(
+            self,
+            anim_obj_or_anim_properties: Union[Dict[str, Any], Animation]) -> Animation:
         """
-        Static-method to check if the given transition is a subclass of `TransitionBase`
-        :param transition_class: Transition class to check its sub-classing
-        :return: None
+        Private method to apply checks and convert all registration values to animation objects
+        :param anim_obj_or_anim_properties: Animation object or dictionary of animation properties to be converted
+        :return: Animation
         """
-        if not issubclass(transition_class, TransitionBase):
-            raise TypeError(f"{transition_class} is not a sub-class of TransitionBase")
+        if isinstance(anim_obj_or_anim_properties, dict):
+            converted_anim_obj = Animation(**anim_obj_or_anim_properties, duration=self._global_anim_speed)
+        elif isinstance(anim_obj_or_anim_properties, ExtendedAnimation):
+            converted_anim_obj = anim_obj_or_anim_properties.copy()
+            converted_anim_obj.duration = self._global_anim_speed
+        elif isinstance(anim_obj_or_anim_properties, Animation):
+            if anim_obj_or_anim_properties.duration == self._global_anim_speed:
+                converted_anim_obj = anim_obj_or_anim_properties
+            else:
+                raise ValueError(
+                    f"{anim_obj_or_anim_properties}'s duration does not match the globally declared anim speed"
+                )
+        else:
+            raise TypeError(f"{anim_obj_or_anim_properties} must be of dict or Animation types")
+        return converted_anim_obj
 
-    @classmethod
-    def _apply_global_speed_anim_duration(cls, anim_obj: Animation) -> None:
+    def register_animations(self, **kwargs: Union[Animation, dict]) -> None:
         """
-        Class-method to ensure that the given animation object's duration
-        follows the class level declared global animation speed
-        :param anim_obj: The animation object to check duration
-        :return: None
-        """
-        if anim_obj.duration != cls.global_anim_speed:
-            if isinstance(anim_obj, Animation):
-                update_animation_duration(anim_obj, cls.global_anim_speed)
-            elif isinstance(anim_obj, ExtendedAnimation):
-                anim_obj.duration = cls.global_anim_speed
-            # else:
-            #     raise ValueError("given animation's duration does not match the globally declared speed")
-
-    @classmethod
-    def _check_anim_obj(cls, anim_obj: Animation) -> None:
-        """
-        Class-method to apply various checks to the given animation object
-        :param anim_obj: The animation object to operate the checks on
-        :return: None
-        """
-        cls._check_obj_type(anim_obj)
-        cls._apply_global_speed_anim_duration(anim_obj)
-
-    @classmethod
-    def register_animations(cls, **kwargs: Animation) -> None:
-        """
-        Class-method to add a new animation to be contained within the class
+        Method to add a new animation to be contained within the class
         :param kwargs: Dictionary of keyword arguments to be registered
         :return: None
         """
-        for name, anim_obj in kwargs.items():
-            cls._check_anim_obj(anim_obj)
-            setattr(cls, name, anim_obj)
+        for name, anim_obj_or_anim_properties in kwargs.items():
+            converted_anim_obj = self._convert_registration_values_to_anim_objs(anim_obj_or_anim_properties)
+            self.__dict__[name] = converted_anim_obj
 
-    @classmethod
-    def register_transitions(cls, **kwargs: Type[TransitionBase]) -> None:
+    def register_transitions(self, **kwargs: Type[TransitionBase]) -> None:
         """
         Class-method to add a new transition to be contained within the class
         :param kwargs: Dictionary of keyword arguments to be registered
         :return: None
         """
         for name, transition_class in kwargs.items():
-            cls._check_transition_class(transition_class)
-            setattr(cls, name, transition_class(duration=cls.global_anim_speed))
+            _check_transition_class(transition_class)
+            self.__dict__[name] = transition_class(duration=self._global_anim_speed)
 
-
-class SnapAnimations(_BaseAnimContainer):
-    """
-    Container class for animations with `SNAP_ANIM_DURATION` as their duration
-    """
-    global_anim_speed = SNAP_ANIM_DURATION
-
-
-class QuickAnimations(_BaseAnimContainer):
-    """
-    Container class for animations with `QUICK_ANIM_DURATION` as their duration
-    """
-    global_anim_speed = QUICK_ANIM_DURATION
-
-
-class SlowAnimations(_BaseAnimContainer):
-    """
-    Container class for animations with `SLOW_ANIM_DURATION` as their duration
-    """
-    global_anim_speed = SLOW_ANIM_DURATION
+    @property
+    def global_anim_speed(self) -> Number:
+        return self._global_anim_speed
 
 
 _DEFAULT_ANIMATIONS: Final = {
-    "FADE_IN": ExtendedAnimation(**_fade_in_properties),
-    "FADE_OUT": ExtendedAnimation(**_fade_out_properties),
-    "PRIMARY_COLOR": ExtendedAnimation(**_primary_color_properties),
-    "OPPOSITE_BG_DARKEST_COLOR": ExtendedAnimation(**_opposite_bg_darkest_color_properties),
-    "OPPOSITE_BG_DARKEST_FADE_OUT": ExtendedAnimation(
-        **_opposite_bg_darkest_color_properties,
-        **_fade_out_properties,
-    ),
-    "PRIMARY_FADE_IN": ExtendedAnimation(
-        **_primary_color_properties,
-        **_fade_in_properties,
-    ),
+    "fade_in": _fade_in_properties,
+    "fade_out": _fade_out_properties,
+    "primary_color": _primary_color_properties,
+    "opposite_bg_darkest_color": _opposite_bg_darkest_color_properties,
+    "opposite_bg_darkest_fade_out": {**_opposite_bg_darkest_color_properties, **_fade_out_properties},
+    "primary_fade_in": {**_primary_color_properties, **_fade_in_properties},
 }
 _DEFAULT_TRANSITION: Final = {
-    "FADE_TRANSITION": FadeTransition,
-    "SLIDE_TRANSITION": SlideTransition,
-    "CARD_TRANSITION": CardTransition,
+    "fade_transition": FadeTransition,
+    "slide_transition": SlideTransition,
+    "card_transition": CardTransition,
 }
 
-SnapAnimations.register_animations(**_DEFAULT_ANIMATIONS)
-SnapAnimations.register_transitions(**_DEFAULT_TRANSITION)
-QuickAnimations.register_animations(**_DEFAULT_ANIMATIONS)
-QuickAnimations.register_transitions(**_DEFAULT_TRANSITION)
-SlowAnimations.register_animations(**_DEFAULT_ANIMATIONS)
-SlowAnimations.register_transitions(**_DEFAULT_TRANSITION)
+
+def register_default_animations(anim_container: BaseAnimContainer) -> None:
+    """
+    Convenience function to register default animations to the container
+    :param anim_container: Container instance to register the animations to
+    :return: None
+    """
+    anim_container.register_animations(**_DEFAULT_ANIMATIONS)
+
+
+def register_default_transitions(anim_container: BaseAnimContainer) -> None:
+    """
+    Convenience function to register default transitions to the container
+    :param anim_container: Container class to register the transitions to
+    :return: None
+    """
+    anim_container.register_transitions(**_DEFAULT_TRANSITION)
+
+
+SnapAnimations = BaseAnimContainer(global_anim_speed=SNAP_ANIM_DURATION)
+QuickAnimations = BaseAnimContainer(global_anim_speed=QUICK_ANIM_DURATION)
+SlowAnimations = BaseAnimContainer(global_anim_speed=SLOW_ANIM_DURATION)
+for pre_defined_anim_container in (SnapAnimations, QuickAnimations, SlowAnimations):
+    register_default_animations(pre_defined_anim_container)
+    register_default_transitions(pre_defined_anim_container)

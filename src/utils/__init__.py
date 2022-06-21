@@ -17,6 +17,7 @@ from src.constants.measurement_units import (
     HOUR,
     MINUTE,
 )
+from pathlib import Path
 from threading import Thread
 from kivy import platform
 from kivy.animation import Animation
@@ -24,6 +25,8 @@ from kivy.logger import LoggerHistory
 
 __all__ = (
     "threaded",
+    "convert_file_path_to_string",
+    "convert_string_to_file_path",
     "is_plural",
     "shuffle",
     "move_index",
@@ -58,6 +61,24 @@ def threaded(function: Callable):
         return thread
 
     return _run_in_thread
+
+
+def convert_file_path_to_string(file_path: FilePath) -> str:
+    """
+    Convenience/Semantic function to convert a file path to a string
+    :param file_path: String or object to convert
+    :return: str
+    """
+    return str(file_path)
+
+
+def convert_string_to_file_path(file_path: FilePath) -> Path:
+    """
+    Convenience/Semantic function to convert a file path to a path obj
+    :param file_path: String or object to convert
+    :return: str
+    """
+    return Path(file_path)
 
 
 def is_plural(number: int) -> bool:
@@ -199,7 +220,7 @@ def update_animation_duration(animation_obj: Animation, new_duration: Number) ->
     :param new_duration: New duration to be set for the animation
     :return: None
     """
-    super(type(animation_obj), animation_obj).__init__(
+    animation_obj.__init__(
         duration=new_duration,
         transition=animation_obj.transition,
         **animation_obj.animated_properties
@@ -213,7 +234,7 @@ def update_animation_transition(animation_obj: Animation, new_transition: str) -
     :param new_transition: New transition to be set for the animation
     :return: None
     """
-    super(type(animation_obj), animation_obj).__init__(
+    animation_obj.__init__(
         duration=animation_obj.duration,
         transition=new_transition,
         **animation_obj.animated_properties
@@ -328,7 +349,7 @@ def open_file(file_path: FilePath) -> None:
     :param file_path: Path to the file to be opened
     :return: None
     """
-    file_path = str(file_path)
+    file_path = convert_file_path_to_string(file_path)
     if platform == "win":
         os.startfile(file_path)
     elif platform == "macosx":

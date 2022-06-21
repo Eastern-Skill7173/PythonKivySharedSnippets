@@ -7,6 +7,7 @@ from constants.app_info import (
 import os
 
 os.environ["KIVY_AUDIO"] = AUDIO_PROVIDER
+os.environ["PLATFORM_AUDIO_PLAYER_INTEGRATION"] = "android,windows,linux"
 
 from kivy import Config
 
