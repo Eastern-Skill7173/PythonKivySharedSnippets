@@ -10,6 +10,7 @@ __all__ = (
     "Number",
     "FilePath",
     "OptionalFilePath",
+    "FilePathBytes",
     "TextFileType",
     "BinaryFileType",
 )
@@ -18,5 +19,6 @@ __all__ = (
 Number = Union[int, float]
 FilePath = Union[str, Path]
 OptionalFilePath = Optional[FilePath]
+FilePathBytes = Union[FilePath, bytes]
 TextFileType = Union[FilePath, TextIO]
 BinaryFileType = Union[FilePath, BinaryIO]

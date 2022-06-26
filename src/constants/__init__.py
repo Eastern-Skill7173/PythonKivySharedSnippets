@@ -19,13 +19,13 @@ __all__ = (
 
 
 AUTHOR_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173"
-PROJECT_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173/SharedSnippets"
+PROJECT_GITHUB_URL: Final = "https://github.com/Eastern-Skill7173/PythonKivySharedSnippets"
 IMAGES_SOURCE_URL: Final = "https://unsplash.com/"
 ICONS_SOURCE_URL: Final = "https://materialdesignicons.com/"
 FONTS_SOURCE_URL: Final = "https://fonts.google.com/"
 MUSICS_SOURCE_URL: Final = "https://www.fesliyanstudios.com/"
 AUTHOR_GITHUB_SHORT_URL: Final = "github.com/Eastern-Skill7173"
-PROJECT_GITHUB_SHORT_URL: Final = "github.com/Eastern-Skill7173/SharedSnippets"
+PROJECT_GITHUB_SHORT_URL: Final = "github.com/Eastern-Skill7173/PythonKivySharedSnippets"
 IMAGES_SOURCE_SHORT_URL: Final = "unsplash.com"
 ICONS_SOURCE_SHORT_URL: Final = "materialdesignicons.com"  # NOQA
 FONTS_SOURCE_SHORT_URL: Final = "fonts.google.com"

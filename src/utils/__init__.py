@@ -4,6 +4,8 @@ import json
 import webbrowser
 import re
 import random
+from datetime import datetime
+from io import BytesIO
 from typing import (
     Callable,
     Optional,
@@ -11,7 +13,11 @@ from typing import (
     Dict,
     Any,
 )
-from src.type_aliases import Number, FilePath
+from src.type_aliases import (
+    Number,
+    FilePath,
+    FilePathBytes,
+)
 from src.constants.measurement_units import (
     SIUnitsPrefixes,
     HOUR,
@@ -21,6 +27,7 @@ from pathlib import Path
 from threading import Thread
 from kivy import platform
 from kivy.animation import Animation
+from kivy.core.image import Image as CoreImage
 from kivy.logger import LoggerHistory
 
 __all__ = (
@@ -36,9 +43,11 @@ __all__ = (
     "matched_prefix_dict",
     "human_readable_size",
     "human_readable_duration",
+    "human_readable_timestamp",
     "update_animation_duration",
     "update_animation_transition",
     "update_animation_properties",
+    "create_texture",
     "get_logger_history",
     "read_json_file",
     "write_to_json_file",
@@ -213,6 +222,16 @@ def human_readable_duration(seconds: Number) -> str:
     return string_converted_duration
 
 
+def human_readable_timestamp(timestamp: Number, string_format: str = "%Y-%m-%d | %H:%M:%S") -> str:
+    """
+    Convenience function to convert a timestamp to a human-readable format with the specified formatting
+    :param timestamp: Timestamp value to be converted (e.g time.time())
+    :param string_format: General format for the conversion return value to be based on
+    :return: str
+    """
+    return datetime.fromtimestamp(timestamp).strftime(string_format)
+
+
 def update_animation_duration(animation_obj: Animation, new_duration: Number) -> None:
     """
     Convenience function to update an `Animation` object's duration
@@ -255,6 +274,23 @@ def update_animation_properties(
     if clear_previous_items:
         animation_obj.animated_properties.clear()
     animation_obj.animated_properties.update(kwargs)
+
+
+def create_texture(source: FilePathBytes, extension: str = "jpg"):
+    """
+    Convenience function to create texture out of bytes
+    :param source: Source parameter for the texture. Could be either `str` or `bytes`
+    :param extension: File extension to be used for the texture
+    :return: Any
+    """
+    if isinstance(source, (str, Path)):
+        with open(convert_file_path_to_string(source), "rb") as file_binary:
+            proper_bytes = file_binary.read()
+    elif isinstance(source, bytes):
+        proper_bytes = source
+    else:
+        raise TypeError("Invalid type for creating texture")
+    return CoreImage(BytesIO(proper_bytes), ext=extension).texture
 
 
 def get_logger_history() -> str:

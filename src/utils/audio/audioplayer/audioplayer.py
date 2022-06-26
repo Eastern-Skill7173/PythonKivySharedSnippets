@@ -1,16 +1,17 @@
 """
 Module is still a work in progress
-For now it is recommended to not use this module
+For now it is recommended NOT to use this module
 """
 
 
 import os
+from pathlib import Path
 from typing import Iterable, Union, Final
-from src.type_aliases import Number
+from src.type_aliases import Number, FilePath
 from kivy.utils import platform
 from kivy.clock import Clock
 from kivy.core.audio import SoundLoader, Sound
-from src.utils import human_readable_duration
+from src.utils import human_readable_duration, convert_file_path_to_string
 
 __all__ = (
     "AudioPlayer",
@@ -28,6 +29,7 @@ if platform in os.getenv("PLATFORM_AUDIO_PLAYER_INTEGRATION", '').split(','):
     elif platform == "win":
         from _windows_player_integration import WindowsSoundPlayer
         SoundLoader.register(WindowsSoundPlayer)
+
 """
 In order to integrate and utilize every platform's native media player,
 before importing the module you must set the "PLATFORM_AUDIO_PLAYER_INTEGRATION"
@@ -50,6 +52,21 @@ Soon to be integrated:
     windows: `win`
     linux: `linux`
 """
+
+
+def _convert_registration_value_to_sound_objs(filepath_or_sound_obj: Union[FilePath, Sound]) -> Sound:
+    """
+    Private function to check & convert registration value to sound objects
+    :param filepath_or_sound_obj: Path or sound object at registration to be converted
+    :return: Sound
+    """
+    if isinstance(filepath_or_sound_obj, (str, Path)):
+        sound_obj = SoundLoader.load(convert_file_path_to_string(filepath_or_sound_obj))
+    elif isinstance(filepath_or_sound_obj, Sound):
+        sound_obj = filepath_or_sound_obj
+    else:
+        raise TypeError("can only accept types of str, Path and Sound")
+    return sound_obj
 
 
 class AudioPlayer:
@@ -228,6 +245,21 @@ class AudioPlayer:
             if self._loop:
                 self.play()
 
+    def _configure_sound_obj(self, sound_obj: Sound) -> None:
+        """
+        Private method to configure a sound object to match player behavior.
+        (Set its volume to globally declared volume, Bind `on_play` & `on_stop` methods...)
+        :param sound_obj: The sound object to be configured
+        :return:
+        """
+        sound_obj.volume = self._volume
+        sound_obj.bind(
+            on_play=lambda sound: self._initialize_estimation()
+        )
+        sound_obj.bind(
+            on_stop=lambda sound: self._cancel_estimation()
+        )
+
     def clear_queue(self) -> None:
         """
         Method to clear what is in the queue
@@ -254,17 +286,8 @@ class AudioPlayer:
                 found_alias = self.get_alias(audio_file)
                 if found_alias:
                     audio_file = found_alias
-            if isinstance(audio_file, str):
-                sound_obj = SoundLoader.load(audio_file)
-            else:
-                sound_obj = audio_file
-            sound_obj.volume = self._volume
-            sound_obj.bind(
-                on_play=lambda sound: self._initialize_estimation()
-            )
-            sound_obj.bind(
-                on_stop=lambda sound: self._cancel_estimation()
-            )
+            sound_obj = _convert_registration_value_to_sound_objs(audio_file)
+            self._configure_sound_obj(sound_obj)
             self._queue.append(sound_obj)
         if self._queue:
             self._state = "queue loaded"

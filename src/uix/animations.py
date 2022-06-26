@@ -178,7 +178,7 @@ class BaseAnimContainer:
             raise TypeError(f"{anim_obj_or_anim_properties} must be of dict or Animation types")
         return converted_anim_obj
 
-    def register_animations(self, **kwargs: Union[Animation, dict]) -> None:
+    def register_animations(self, **kwargs: Union[Dict[str, Any], Animation]) -> None:
         """
         Method to add a new animation to be contained within the class
         :param kwargs: Dictionary of keyword arguments to be registered

@@ -1,4 +1,4 @@
-# SharedSnippets
+# PythonKivySharedSnippets
 
 This repo contains a set of common python, kivy & kivymd utilities 
 I have found myself using throughout the years and a base template for my projects.
