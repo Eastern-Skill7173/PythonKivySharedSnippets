@@ -5,7 +5,7 @@ Module is still NOT implemented
 
 from src.constants.app_info import SPOTIFY_DOWNLOADS_DIRECTORY
 from src.utils import threaded
-from src.utils.audio.streaming_services._base_song import BaseSong
+from src.utils.audio.streaming_services.base import BaseSong
 
 __all__ = (
     "SpotifySong",

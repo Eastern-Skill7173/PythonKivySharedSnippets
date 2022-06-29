@@ -11,8 +11,7 @@ from src.utils import (
     create_texture,
     human_readable_size,
 )
-from src.utils.audio.streaming_services._base_song import BaseSong
-from src.utils.audio.metadata import AudioMetadata
+from src.utils.audio.streaming_services.base import BaseSong
 from kivy.utils import platform
 from kivy.network.urlrequest import UrlRequest
 
@@ -83,25 +82,20 @@ class YouTubeMusicSong(BaseSong):
         to re-fetch the information)
         :return: None
         """
-        # NOTE: method/module is still incomplete
         try:
             extracted_info = self._youtube_dl.extract_info(self._song_id, download=False)
             self._path = self._youtube_dl.prepare_filename(extracted_info)
-            self._title = extracted_info.get("title")
             self._st_size = extracted_info.get("filesize")
-            self._file_size = human_readable_size(self._st_size)  # NOQA
-            self._metadata = AudioMetadata(
-                '',
-                silent=True,
-                title=self._title,
-                artist="unknown artist",
-                date=extracted_info.get("upload_date")
-            )
+            self._file_size = human_readable_size(self._st_size)
+            self._title = extracted_info.get("title")
+            self._artist = extracted_info.get("uploader")
+            self._date = extracted_info.get("upload_date")
             UrlRequest(
                 extracted_info.get("thumbnail"),
                 on_success=lambda request, result: setattr(self, "_cover", create_texture(result))
             )
         except AttributeError as attribute_error:
+            # youtube-dl raises AttributeError on android
             pass
 
     @threaded

@@ -3,18 +3,18 @@ Module is still NOT implemented
 """
 
 
-from src.constants.app_info import DEEZER_DOWNLOADS_DIRECTORY
+from src.constants.app_info import SOUNDCLOUD_DOWNLOADS_DIRECTORY
 from src.utils import threaded
-from src.utils.audio.streaming_services._base_song import BaseSong
+from src.utils.audio.streaming_services.base import BaseSong
 
 __all__ = (
-    "DeezerSong",
+    "SoundCloudSong",
 )
 
 
-class DeezerSong(BaseSong):
+class SoundCloudSong(BaseSong):
     """
-    Utility class to extract information about a Deezer song
+    Utility class to extract information about a Sound-Cloud song
     """
 
     __slots__ = (
@@ -23,7 +23,7 @@ class DeezerSong(BaseSong):
     )
 
     def __init__(self, song_id: str, fetch_info_immediately: bool = True):
-        super(DeezerSong, self).__init__()
+        super(SoundCloudSong, self).__init__()
         self._song_id = song_id
         self._downloaded = False
         if fetch_info_immediately:

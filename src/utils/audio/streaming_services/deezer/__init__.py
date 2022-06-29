@@ -1,0 +1,1 @@
+from .deezer import DeezerSong

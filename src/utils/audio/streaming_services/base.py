@@ -10,7 +10,8 @@ __all__ = (
 class BaseSong:
     """
     Base class for any object representing a music/audio file.
-    Used in `./youtube_music_song.py`, `./deezer_song.py`, `./spotify_song.py` & `./soundcloud_song.py`
+    Used in `./youtube_music.py`, `./deezer.py`,
+    `./spotify.py` & `./soundcloud.py`
     """
 
     __slots__ = (

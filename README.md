@@ -24,6 +24,8 @@ If you __cannot__ find a package that matches your machine, you can follow the r
 
 If your operating system or architecture is not included in the packages list, or you plan on contributing or testing the project you can set it up from the source code. follow these steps as mentioned:
 
+#### Installing the pre-requisites
+
 1. You __MUST__ have a python >= 3.8 interpreter installed on your machine. In order to check your python version, you can do:
 
     ```
@@ -73,7 +75,7 @@ If your operating system or architecture is not included in the packages list, o
     ```
     sudo dnf install python3-pip
     ```
-    On _Mac (Using homebrew)_:
+    On _Mac_:
 
     ```
     python3 -m pip install --upgrade pip
@@ -125,7 +127,30 @@ If your operating system or architecture is not included in the packages list, o
     brew install xclip xsel
     ```
 
-5. It is __highly recommended__ that you create a python virtual environment. A virtual environment helps organize projects and prevent python package conflicts.
+#### Setting up the application
+
+5. Clone the repository (copy the source code):
+
+    ```
+    git clone https://github.com/Eastern-Skill7173/PythonKivySharedSnippets.git
+    ```
+
+    _TIP:_ you can add a `--depth 1` to the end of the command to only copy the latest version of each file if you are planing on just using the project, like so:
+    ```
+    git clone https://github.com/Eastern-Skill7173/PythonKivySharedSnippets.git --depth 1
+    ```
+
+After cloning the repo, in order to simplify the setup process, you can run the ___installation_script.sh___ file to automate the process, like so:
+
+```
+sh PythonKivySharedSnippets/installation_script.sh
+```
+
+This script will install the program in its location.
+
+if you want to do it manually follow the next steps:
+
+6. It is __highly recommended__ that you create a python virtual environment. A virtual environment helps organize projects and prevent python package conflicts.
 
     1. Ensure you have the latest setuptools and virtualenv packages installed:
         ```
@@ -150,24 +175,17 @@ If your operating system or architecture is not included in the packages list, o
        source ./venv/bin/activate
        ```
        You should now see the name of the virtual environment as a prefix on each line of the terminal. This indicates that the virtual environment has been turned on successfully.
-    5. Clone the repository:
-        ```
-        git clone https://github.com/Eastern-Skill7173/SharedSnippets.git
-        ```
-        _TIP:_ you can add a `--depth 1` to the end of the command to only copy the latest version of each file if you are planing on just using the project, like so:
-        ```
-        git clone https://github.com/Eastern-Skill7173/SharedSnippets.git --depth 1
-        ```
+
 
 
 6. Install the mentioned requirements in the `requirements.txt` file included inside the copied project folder, like so:
     ```
-    pip3 install -r SharedSnippets/requirements.txt
+    pip3 install -r PythonKivySharedSnippets/requirements.txt
     ```
 
 7. The project is now installed! All that is remaining is to run the `main.py` file located in the project folder, like so:
     ```
-    python SharedSnippets/main.py
+    python3 PythonKivySharedSnippets/main.py
     ```
 
 Installing project from source has many benefits, the most important one being that in the future if any updates are released you can easily just update the files and re-run the script, like so:
@@ -216,7 +234,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 * [**Eastern-Skill7173**](https://github.com/Eastern-Skill7173) - *creator and maintainer*
 
-See also the list of [contributors](https://github.com/Eastern-Skill7173/SharedSnippets/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Eastern-Skill7173/PythonKivySharedSnippets/graphs/contributors) who participated in this project.
 
 ## License
 
