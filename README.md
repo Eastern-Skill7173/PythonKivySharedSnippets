@@ -9,7 +9,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Pre-Packaged Executables
 
-Setting up the program using pre-packaged executables doesn't require anything. Simply download the best provided package for your machine (_based on your os and CPU architecture_).
+Setting up the program using pre-packaged executables doesn't require anything. Simply download the best provided package for your machine (_based on your os and architecture_).
 
 Current available packages are:
 
@@ -17,6 +17,7 @@ Current available packages are:
 * RHEL & Fedora (_.rpm_)
 * Ubuntu (_.deb_)
 * Android (_.apk_)
+* IOS (_.ipa_)
 
 If you __cannot__ find a package that matches your machine, you can follow the rest of this guide to set up the project from source.
 
@@ -26,13 +27,13 @@ If your operating system or architecture is not included in the packages list, o
 
 #### Installing the pre-requisites
 
-1. You __MUST__ have a python >= 3.8 interpreter installed on your machine. In order to check your python version, you can do:
+1. You __MUST__ have a [python](https://www.python.org/) >= 3.8 interpreter installed on your machine. In order to check your python version, you can do:
 
     ```
     python3 --version
     ```
    
-    If you are on ___Windows___, you can visit the official [python](https://www.python.org/) website to download a matching version.
+    If you are on ___Windows___, you can visit the [download section](https://www.python.org/downloads/) of the official python website in order to download a matching version.
 
     If you are on ___Linux OR Mac___, you already have python installed, but it is highly possible that is does not match the minimum required version. You can get a matching version using the package manager on your machine, like so:
 
@@ -60,7 +61,8 @@ If your operating system or architecture is not included in the packages list, o
     ```
     pip --version
     ```
-    If you are on ___Windows___, you probably have pip installed alongside python.
+   
+    If you are on ___Windows___, you probably have pip installed alongside python. If not, follow the [official pip installation guide](https://pip.pypa.io/en/stable/installation/).
 
     If you are on ___Linux OR Mac___, using your package manager you can install pip, like so:
 
@@ -82,13 +84,13 @@ If your operating system or architecture is not included in the packages list, o
     ```
 
 
-3. You __MUST__ also have ___git___ installed on your machine to be able to copy the repo, otherwise you are going to have to manually copy and paste the files' content. In order to check if you have git installed, you can do:
+3. You __MUST__ also have [___git___](https://git-scm.com/) installed on your machine to be able to copy the repo, otherwise you are going to have to manually copy and paste the files' content. In order to check if you have git installed, you can do:
 
     ```
     git --version
     ```
 
-    If you are on ___Windows___, you can visit the official [git](https://git-scm.com/) website and follow their guides to have it setup on your machine.
+    If you are on ___Windows___, you can visit the [download section](https://git-scm.com/downloads) of the official git website and follow their guides to have it setup on your machine.
 
     If you are on ___Linux OR Mac___, you can easily install git through your package manager, like so:
 
@@ -127,6 +129,34 @@ If your operating system or architecture is not included in the packages list, o
     brew install xclip xsel
     ```
 
+5. You __MUST__ have an [ffmpeg](https://ffmpeg.org/) build installed on your machine. Since the program relies on ffmpeg as its audio provider it should also be added to the __PATH__ environmental variable. In order to check if you have ffmpeg installed, you can do:
+
+    ```
+    ffmpeg -version
+    ```
+
+    If you are on ___Windows___, you can visit [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) to install a pre-complied ffmpeg build. It is recommended that you install one of the release builds.
+
+    If you are on ___Debian, Ubuntu OR Mac___, you can easily install ffmpeg through your package manager, like so:
+
+    On _Ubuntu_:
+
+    ```
+    sudo apt install ffmpeg
+    ```
+    On _Mac (Using homebrew)_:
+
+    ```
+    brew install ffmpeg
+    ```
+    If you are on _Fedora_, you must first enable and configure the RPM fusion repo:
+
+    ```
+    sudo dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+    sudo dnf install https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+    sudo dnf install ffmpeg
+    ```
+
 #### Setting up the application
 
 5. Clone the repository (copy the source code):
@@ -140,15 +170,20 @@ If your operating system or architecture is not included in the packages list, o
     git clone https://github.com/Eastern-Skill7173/PythonKivySharedSnippets.git --depth 1
     ```
 
-After cloning the repo, in order to simplify the setup process, you can run the ___installation_script.sh___ file to automate the process, like so:
+After cloning the repo, in order to simplify the setup process, you can run one of the pre-written automation scripts based on your operating system:
 
-```
-sh PythonKivySharedSnippets/installation_script.sh
-```
+   * On Windows, click on the `installtion_script.bat` file inside the `PythonKivySharedSnippets` folder.
 
-This script will install the program in its location.
 
-if you want to do it manually follow the next steps:
+   * On Linux or Mac, Open your terminal and switch to the cloned repo's directory, then run the following command:
+
+      ```
+      sh installation_script.sh
+      ```
+
+The scripts will install the program in its location.
+
+If you want to do it manually follow the next steps:
 
 6. It is __highly recommended__ that you create a python virtual environment. A virtual environment helps organize projects and prevent python package conflicts.
 
