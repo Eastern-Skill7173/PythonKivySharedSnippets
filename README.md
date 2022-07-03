@@ -159,7 +159,7 @@ If your operating system or architecture is not included in the packages list, o
 
 #### Setting up the application
 
-5. Clone the repository (copy the source code):
+6. Clone the repository (copy the source code):
 
     ```
     git clone https://github.com/Eastern-Skill7173/PythonKivySharedSnippets.git
@@ -185,7 +185,7 @@ The scripts will install the program in its location.
 
 If you want to do it manually follow the next steps:
 
-6. It is __highly recommended__ that you create a python virtual environment. A virtual environment helps organize projects and prevent python package conflicts.
+7. It is __highly recommended__ that you create a python virtual environment. A virtual environment helps organize projects and prevent python package conflicts.
 
     1. Ensure you have the latest setuptools and virtualenv packages installed:
         ```
@@ -213,14 +213,14 @@ If you want to do it manually follow the next steps:
 
 
 
-6. Install the mentioned requirements in the `requirements.txt` file included inside the copied project folder, like so:
+7. Install the mentioned requirements in the `requirements.txt` file using pip, like so:
     ```
-    pip3 install -r PythonKivySharedSnippets/requirements.txt
+    pip3 install -r requirements.txt
     ```
 
-7. The project is now installed! All that is remaining is to run the `main.py` file located in the project folder, like so:
+8. The project is now installed! All that is remaining is to run the `main.py` file, like so:
     ```
-    python3 PythonKivySharedSnippets/main.py
+    python3 main.py
     ```
 
 Installing project from source has many benefits, the most important one being that in the future if any updates are released you can easily just update the files and re-run the script, like so:

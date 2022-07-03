@@ -10,12 +10,12 @@ python3 -m virtualenv venv
 echo "Activating virtual environment"
 source ./venv/bin/activate
 echo "Installing requirements.txt"
-pip3 install -r PythonKivySharedSnippets/requirements.txt
+pip3 install -r requirements.txt
 echo "Application is now successfully installed."
 read -r -p "Would you like to launch the application? [Y/n]" LAUNCH_APP
 if [ "$(echo "${LAUNCH_APP}" | tr '[:upper:]' '[:lower:]')" == "y" ]
 then
-  python3 PythonKivySharedSnippets/main.py
+  python3 main.py
 fi
 echo "Exiting virtual environment"
 deactivate
