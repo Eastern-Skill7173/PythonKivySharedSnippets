@@ -5,7 +5,6 @@ import webbrowser
 import re
 import random
 from datetime import datetime
-from io import BytesIO
 from typing import (
     Callable,
     Optional,
@@ -16,7 +15,6 @@ from typing import (
 from src.type_aliases import (
     Number,
     FilePath,
-    FilePathBytes,
 )
 from src.constants.measurement_units import (
     SIUnitsPrefixes,
@@ -25,10 +23,7 @@ from src.constants.measurement_units import (
 )
 from pathlib import Path
 from threading import Thread
-from kivy import platform
-from kivy.animation import Animation
-from kivy.core.image import Image as CoreImage
-from kivy.logger import LoggerHistory
+from src.constants import CURRENT_MACHINE
 
 __all__ = (
     "threaded",
@@ -44,14 +39,8 @@ __all__ = (
     "human_readable_size",
     "human_readable_duration",
     "human_readable_timestamp",
-    "update_animation_duration",
-    "update_animation_transition",
-    "update_animation_properties",
-    "create_texture",
-    "get_logger_history",
     "read_json_file",
     "write_to_json_file",
-    "switch_screen",
     "open_link",
     "open_file",
 )
@@ -232,75 +221,6 @@ def human_readable_timestamp(timestamp: Number, string_format: str = "%Y-%m-%d |
     return datetime.fromtimestamp(timestamp).strftime(string_format)
 
 
-def update_animation_duration(animation_obj: Animation, new_duration: Number) -> None:
-    """
-    Convenience function to update an `Animation` object's duration
-    :param animation_obj: The `Animation` object to be updated
-    :param new_duration: New duration to be set for the animation
-    :return: None
-    """
-    animation_obj.__init__(
-        duration=new_duration,
-        transition=animation_obj.transition,
-        **animation_obj.animated_properties
-    )
-
-
-def update_animation_transition(animation_obj: Animation, new_transition: str) -> None:
-    """
-    Convenience function to update an `Animation` object's transition
-    :param animation_obj: The `Animation` object to be updated
-    :param new_transition: New transition to be set for the animation
-    :return: None
-    """
-    animation_obj.__init__(
-        duration=animation_obj.duration,
-        transition=new_transition,
-        **animation_obj.animated_properties
-    )
-
-
-def update_animation_properties(
-        animation_obj: Animation,
-        clear_previous_items: bool = False,
-        **kwargs) -> None:
-    """
-    Convenience function to update an `Animation` object's animated properties
-    :param animation_obj: The `Animation` object to be updated
-    :param clear_previous_items: Whether to clear the existing properties before updating
-    :param kwargs: List of keyword arguments to update the animated properties
-    :return: None
-    """
-    if clear_previous_items:
-        animation_obj.animated_properties.clear()
-    animation_obj.animated_properties.update(kwargs)
-
-
-def create_texture(source: FilePathBytes, extension: str = "jpg"):
-    """
-    Convenience function to create texture out of bytes
-    :param source: Source parameter for the texture. Could be either `str` or `bytes`
-    :param extension: File extension to be used for the texture
-    :return: Any
-    """
-    if isinstance(source, (str, Path)):
-        with open(convert_file_path_to_string(source), "rb") as file_binary:
-            proper_bytes = file_binary.read()
-    elif isinstance(source, bytes):
-        proper_bytes = source
-    else:
-        raise TypeError("Invalid type for creating texture")
-    return CoreImage(BytesIO(proper_bytes), ext=extension).texture
-
-
-def get_logger_history() -> str:
-    """
-    Convenience function to get logger history
-    :return: str
-    """
-    return '\n'.join(log_record.message for log_record in reversed(LoggerHistory.history))
-
-
 def read_json_file(path: str, silent: bool = True) -> Optional[dict]:
     """
     Convenience function to read a json file with catching exceptions
@@ -344,29 +264,6 @@ def write_to_json_file(content,
             raise type_error
 
 
-def switch_screen(screen_manager,
-                  screen: str,
-                  direction: Optional[str] = None,
-                  beginning_transition: Optional = None,
-                  ending_transition: Optional = None) -> None:
-    """
-    Convenience method for switching screens between screen managers
-    :param screen_manager: The targeted `ScreenManager` instance
-    :param screen: The desired screen to switch to
-    :param direction: The direction of `screen_manager` transition
-    :param beginning_transition: The transition to use before switching screens
-    :param ending_transition: The transition to use after switching screens
-    :return: None
-    """
-    if beginning_transition:
-        screen_manager.transition = beginning_transition
-    if direction:
-        screen_manager.transition.direction = direction
-    screen_manager.current = screen
-    if ending_transition:
-        screen_manager.transition = ending_transition
-
-
 def open_link(link: str, new: int = 2, auto_raise: bool = True) -> None:
     """
     Convenience function to open the given url in user's default browser
@@ -386,9 +283,9 @@ def open_file(file_path: FilePath) -> None:
     :return: None
     """
     file_path = convert_file_path_to_string(file_path)
-    if platform == "win":
+    if CURRENT_MACHINE == "Windows":
         os.startfile(file_path)
-    elif platform == "macosx":
+    elif CURRENT_MACHINE == "Darwin":
         subprocess.Popen(["open", file_path])
     else:
         subprocess.Popen(["xdg-open", file_path])

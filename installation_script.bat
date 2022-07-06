@@ -3,8 +3,8 @@
 :: on a windows machine, after the source code has been cloned.
 :: The application will be set up in the same directory as the script
 
-echo Installing setuptools and virtualenv
-pip install setuptools virtualenv
+echo Installing virtualenv
+pip install --user virtualenv
 echo Creating virtual environment named venv
 python -m virtualenv venv
 echo Activating virtual environment

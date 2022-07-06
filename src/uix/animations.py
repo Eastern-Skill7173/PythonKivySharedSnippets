@@ -25,7 +25,7 @@ from kivy.uix.screenmanager import (
     CardTransition,
 )
 from kivymd.app import MDApp
-from src.utils import (
+from src.utils.kivy import (
     update_animation_duration,
     update_animation_transition,
     update_animation_properties,

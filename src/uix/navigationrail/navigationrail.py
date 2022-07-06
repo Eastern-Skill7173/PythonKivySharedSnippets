@@ -14,7 +14,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.behaviors import RectangularElevationBehavior
 from src.uix.animations import SnapAnimations
-from src.utils import switch_screen
+from src.utils.kivy import switch_screen
 
 __all__ = (
     "NavigationRailItem",

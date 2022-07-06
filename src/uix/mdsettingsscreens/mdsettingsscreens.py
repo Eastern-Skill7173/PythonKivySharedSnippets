@@ -1,5 +1,6 @@
 import os.path
 from src.constants.app_info import UIX_DIRECTORY
+from src.constants.uix import TOMATO_RGB
 from kivy.lang import Builder
 from kivy.properties import ColorProperty, StringProperty
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -18,14 +19,12 @@ class MDLogLayout(MDBoxLayout):
     :attr:`logger_history` is a :class:`~kivy.properties.StringProperty`
     and defaults to `''`
     """
-    warning_note_color = ColorProperty(
-        [1, 0.38823529411764707, 0.2784313725490196]
-    )
+    warning_note_color = ColorProperty(TOMATO_RGB)
     """
     Warning color for the `NOTE:` portion of the labels.
     
     :attr:`warning_note_color` is a :class:`~kivy.properties.ColorProperty`
-    and defaults to `[1, 0.38823529411764707, 0.2784313725490196]`
+    and defaults to `TOMATO_RGB`
     """
     _instance = None
 

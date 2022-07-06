@@ -8,9 +8,9 @@ from youtube_dl import YoutubeDL
 from src.constants.app_info import YOUTUBE_MUSIC_DOWNLOADS_DIRECTORY
 from src.utils import (
     threaded,
-    create_texture,
     human_readable_size,
 )
+from src.utils.kivy import create_texture
 from src.utils.audio.streaming_services.base import BaseSong
 from kivy.utils import platform
 from kivy.network.urlrequest import UrlRequest
