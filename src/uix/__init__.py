@@ -1,30 +1,32 @@
 import os.path
 from typing import Final
-from src.constants.app_info import UIX_DIRECTORY
-from src.utils import read_json_file
+from src.constants.app_info import UIX_DIRECTORY, TYPOGRAPHY_DIRECTORY
 from kivy.utils import platform
 from kivy.factory import Factory
+from src.uix._typography import TypoGraphy
 
 __all__ = (
-    "TYPOGRAPHY",
+    "AppTypoGraphy",
 )
 
 
-_DESKTOP_TYPOGRAPHY: Final = read_json_file(
-    os.path.join(UIX_DIRECTORY, "desktop_typography.json")
+_DESKTOP_TYPOGRAPHY_PATH: Final = os.path.join(
+    TYPOGRAPHY_DIRECTORY, "desktop_typography.json"
 )
-_MOBILE_TYPOGRAPHY: Final = read_json_file(
-    os.path.join(UIX_DIRECTORY, "mobile_typography.json")
+_MOBILE_TYPOGRAPHY_PATH: Final = os.path.join(
+    TYPOGRAPHY_DIRECTORY, "mobile_typography.json"
 )
 _PLATFORM_SPECIFIC_TYPOGRAPHY: Final = {
-    "win": _DESKTOP_TYPOGRAPHY,
-    "linux": _DESKTOP_TYPOGRAPHY,
-    "macosx": _DESKTOP_TYPOGRAPHY,
-    "android": _MOBILE_TYPOGRAPHY,
-    "ios": _MOBILE_TYPOGRAPHY,
-    "unknown": _DESKTOP_TYPOGRAPHY,
+    "win": _DESKTOP_TYPOGRAPHY_PATH,
+    "linux": _DESKTOP_TYPOGRAPHY_PATH,
+    "macosx": _DESKTOP_TYPOGRAPHY_PATH,
+    "android": _MOBILE_TYPOGRAPHY_PATH,
+    "ios": _MOBILE_TYPOGRAPHY_PATH,
+    "unknown": _DESKTOP_TYPOGRAPHY_PATH,
 }
-TYPOGRAPHY: Final = _PLATFORM_SPECIFIC_TYPOGRAPHY[platform]
+AppTypoGraphy = TypoGraphy(
+    json_typography_path=_PLATFORM_SPECIFIC_TYPOGRAPHY[platform]
+)
 
 for class_name, module in (
     (

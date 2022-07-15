@@ -1,0 +1,5 @@
+setuptools~=62.6.0
+virtualenv~=20.15.1
+Cython~=0.29.30
+pyinstaller~=5.2
+https://github.com/kivy/buildozer/archive/master.zip

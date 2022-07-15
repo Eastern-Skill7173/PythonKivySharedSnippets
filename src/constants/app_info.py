@@ -10,6 +10,7 @@ __all__ = (
     "MUSIC_DIRECTORY",
     "FONTS_DIRECTORY",
     "STREAMING_SERVICES_DOWNLOADS_DIRECTORY",
+    "TYPOGRAPHY_DIRECTORY",
     "ICONS_DIRECTORY",
     "ICON_PATH",
     "YOUTUBE_MUSIC_DOWNLOADS_DIRECTORY",
@@ -28,6 +29,7 @@ IMAGES_DIRECTORY: Final = "images"
 MUSIC_DIRECTORY: Final = "music"
 FONTS_DIRECTORY: Final = "fonts"
 STREAMING_SERVICES_DOWNLOADS_DIRECTORY: Final = "streaming_services_downloads"
+TYPOGRAPHY_DIRECTORY: Final = os.path.join(UIX_DIRECTORY, "_typography")
 ICONS_DIRECTORY: Final = os.path.join(IMAGES_DIRECTORY, "icons")
 ICON_PATH: Final = os.path.join(ICONS_DIRECTORY, "icon.png")
 YOUTUBE_MUSIC_DOWNLOADS_DIRECTORY: Final = os.path.join(
