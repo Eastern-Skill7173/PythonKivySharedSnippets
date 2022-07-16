@@ -1,1 +1,1 @@
-from .button import FlatButton
+from .button import FlatButton  # NOQA

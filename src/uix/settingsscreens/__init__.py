@@ -1,1 +1,1 @@
-from .settingsscreens import LogLayout, InfoLayout
+from .settingsscreens import LogLayout, InfoLayout  # NOQA

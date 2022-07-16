@@ -1,1 +1,1 @@
-from .radiobutton import RadioButton
+from .radiobutton import RadioButton  # NOQA

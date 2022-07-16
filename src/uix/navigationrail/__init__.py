@@ -1,1 +1,1 @@
-from .navigationrail import NavigationRailItem, NavigationRail
+from .navigationrail import NavigationRailItem, NavigationRail  # NOQA

@@ -9,15 +9,15 @@ import os
 os.environ["KIVY_AUDIO"] = AUDIO_PROVIDER
 os.environ["PLATFORM_AUDIO_PLAYER_INTEGRATION"] = "android,windows,linux"
 
-from kivy import Config
+from kivy import Config  # NOQA
 
 Config.set("graphics", "width", STARTUP_WIDTH)
 Config.set("graphics", "height", STARTUP_HEIGHT)
 Config.set("graphics", "minimum_width", STARTUP_WIDTH)
 Config.set("graphics", "minimum_height", STARTUP_HEIGHT)
 
-from kivy.lang import Builder
-from kivy.app import App
+from kivy.lang import Builder  # NOQA
+from kivy.app import App  # NOQA
 
 
 class MainApp(App):

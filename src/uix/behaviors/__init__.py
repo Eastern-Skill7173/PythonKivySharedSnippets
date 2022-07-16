@@ -1,2 +1,2 @@
-from .extendedtogglebutton import ExtendedToggleButtonBehavior
-from .selectionbehavior import SelectionBehavior
+from .extendedtogglebutton import ExtendedToggleButtonBehavior  # NOQA
+from .selectionbehavior import SelectionBehavior  # NOQA

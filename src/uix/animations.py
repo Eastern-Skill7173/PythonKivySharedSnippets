@@ -46,7 +46,9 @@ _main_app_theme_cls = MDApp.get_running_app().theme_cls
 _fade_in_properties = {"opacity": 1}
 _fade_out_properties = {"opacity": 0}
 _primary_color_properties = {"color": _main_app_theme_cls.primary_color}
-_opposite_bg_darkest_color_properties = {"color": _main_app_theme_cls.opposite_bg_darkest}
+_opposite_bg_darkest_color_properties = {
+    "color": _main_app_theme_cls.opposite_bg_darkest
+}
 
 
 def _check_anim_type(anim_obj: Animation) -> None:
@@ -61,7 +63,8 @@ def _check_anim_type(anim_obj: Animation) -> None:
 
 def _check_anim_duration(duration: Number) -> None:
     """
-    Private function to check if a given duration is of `int` or `float` and is bigger than zero
+    Private function to check if a given duration is of:
+    `int` or `float` and is bigger than zero
     :param duration: The duration to apply the checks
     :return: None
     """
@@ -73,21 +76,32 @@ def _check_anim_duration(duration: Number) -> None:
 
 def _check_transition_class(transition_class: Type[TransitionBase]) -> None:
     """
-    Private function to check if the given transition is a subclass of `TransitionBase`
+    Private function to check if the given transition
+    is a subclass of `TransitionBase`
     :param transition_class: Transition class to check
     :return: None
     """
     if not issubclass(transition_class, TransitionBase):
-        raise TypeError(f"{transition_class} is not a sub-class of TransitionBase")
+        raise TypeError(
+            f"{transition_class} is not a sub-class of TransitionBase"
+        )
 
 
 class ExtendedAnimation(Animation):
     """
     Class extending base `Animation` capabilities,
-    allows setting new values for `duration`, `transition`, and `animated_properties` post-initialization.
+    allows setting new values for:
+        `duration`
+        `transition`
+        `animated_properties`
+    post-initialization of the object
     """
 
-    def __init__(self, duration: Number = 1, transition: str = "linear", **kwargs):
+    def __init__(
+            self,
+            duration: Number = 1,
+            transition: str = "linear",
+            **kwargs):
         self._duration = duration
         self._transition = transition
         self._animated_properties = kwargs
@@ -105,15 +119,21 @@ class ExtendedAnimation(Animation):
 
     def copy(self) -> "ExtendedAnimation":
         """
-        Method to return a new `ExtendedAnimation` instance with the same values
+        Method to return a new `ExtendedAnimation`
+        instance with the same values
         :return: ExtendedAnimation
         """
-        return type(self)(self._duration, self._transition, **self._animated_properties)
+        return type(self)(
+            self._duration,
+            self._transition,
+            **self._animated_properties
+        )
 
     def update_animated_properties(self, **kwargs):
         """
         Method to update the animation properties of the instance
-        :param kwargs: Key-word arguments to update the animated properties with
+        :param kwargs: Key-word arguments to update
+        the animated properties with
         :return: None
         """
         update_animation_properties(self, **kwargs)
@@ -142,12 +162,17 @@ class ExtendedAnimation(Animation):
 
     @animated_properties.setter
     def animated_properties(self, new_animated_properties: dict) -> None:
-        update_animation_properties(self, clear_previous_items=True, **new_animated_properties)
+        update_animation_properties(
+            self,
+            clear_previous_items=True,
+            **new_animated_properties
+        )
 
 
 class BaseAnimContainer:
     """
-    Base class for animation containers (`SnapAnimations`, `QuickAnimation`, ...).
+    Base class for animation containers
+        (e.g `SnapAnimations`, `QuickAnimation`, ...)
     """
 
     def __init__(self, global_anim_speed: Number):
@@ -156,14 +181,20 @@ class BaseAnimContainer:
 
     def _convert_registration_values_to_anim_objs(
             self,
-            anim_obj_or_anim_properties: Union[Dict[str, Any], Animation]) -> Animation:
+            anim_obj_or_anim_properties: Union[Dict[str, Any], Animation]
+            ) -> Animation:
         """
-        Private method to apply checks and convert all registration values to animation objects
-        :param anim_obj_or_anim_properties: Animation object or dictionary of animation properties to be converted
+        Private method to apply checks and convert
+        all registration valuesto animation objects
+        :param anim_obj_or_anim_properties: Animation object or dictionary of
+        animation properties to be converted
         :return: Animation
         """
         if isinstance(anim_obj_or_anim_properties, dict):
-            converted_anim_obj = Animation(**anim_obj_or_anim_properties, duration=self._global_anim_speed)
+            converted_anim_obj = Animation(
+                **anim_obj_or_anim_properties,
+                duration=self._global_anim_speed
+            )
         elif isinstance(anim_obj_or_anim_properties, ExtendedAnimation):
             converted_anim_obj = anim_obj_or_anim_properties.copy()
             converted_anim_obj.duration = self._global_anim_speed
@@ -172,20 +203,29 @@ class BaseAnimContainer:
                 converted_anim_obj = anim_obj_or_anim_properties
             else:
                 raise ValueError(
-                    f"{anim_obj_or_anim_properties}'s duration does not match the globally declared anim speed"
+                    f"{anim_obj_or_anim_properties}'s duration does not match "
+                    "the globally declared anim speed"
                 )
         else:
-            raise TypeError(f"{anim_obj_or_anim_properties} must be of dict or Animation types")
+            raise TypeError(
+                f"{anim_obj_or_anim_properties} must be of "
+                "dict or Animation types"
+            )
         return converted_anim_obj
 
-    def register_animations(self, **kwargs: Union[Dict[str, Any], Animation]) -> None:
+    def register_animations(
+            self,
+            **kwargs: Union[Dict[str, Any], Animation]) -> None:
         """
         Method to add a new animation to be contained within the class
         :param kwargs: Dictionary of keyword arguments to be registered
         :return: None
         """
         for name, anim_obj_or_anim_properties in kwargs.items():
-            converted_anim_obj = self._convert_registration_values_to_anim_objs(anim_obj_or_anim_properties)
+            converted_anim_obj = \
+                self._convert_registration_values_to_anim_objs(
+                    anim_obj_or_anim_properties
+                )
             self.__dict__[name] = converted_anim_obj
 
     def register_transitions(self, **kwargs: Type[TransitionBase]) -> None:
@@ -196,7 +236,9 @@ class BaseAnimContainer:
         """
         for name, transition_class in kwargs.items():
             _check_transition_class(transition_class)
-            self.__dict__[name] = transition_class(duration=self._global_anim_speed)
+            self.__dict__[name] = transition_class(
+                duration=self._global_anim_speed
+            )
 
     @property
     def global_anim_speed(self) -> Number:
@@ -208,7 +250,10 @@ _DEFAULT_ANIMATIONS: Final = {
     "fade_out": _fade_out_properties,
     "primary_color": _primary_color_properties,
     "opposite_bg_darkest_color": _opposite_bg_darkest_color_properties,
-    "opposite_bg_darkest_fade_out": {**_opposite_bg_darkest_color_properties, **_fade_out_properties},
+    "opposite_bg_darkest_fade_out": {
+        **_opposite_bg_darkest_color_properties,
+        **_fade_out_properties
+    },
     "primary_fade_in": {**_primary_color_properties, **_fade_in_properties},
 }
 _DEFAULT_TRANSITION: Final = {
@@ -239,6 +284,10 @@ def register_default_transitions(anim_container: BaseAnimContainer) -> None:
 SnapAnimations = BaseAnimContainer(global_anim_speed=SNAP_ANIM_DURATION)
 QuickAnimations = BaseAnimContainer(global_anim_speed=QUICK_ANIM_DURATION)
 SlowAnimations = BaseAnimContainer(global_anim_speed=SLOW_ANIM_DURATION)
-for pre_defined_anim_container in (SnapAnimations, QuickAnimations, SlowAnimations):
+for pre_defined_anim_container in (
+        SnapAnimations,
+        QuickAnimations,
+        SlowAnimations,
+        ):
     register_default_animations(pre_defined_anim_container)
     register_default_transitions(pre_defined_anim_container)

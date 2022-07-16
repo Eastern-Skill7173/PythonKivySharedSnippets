@@ -14,7 +14,7 @@ class RadioButton(ExtendedToggleButtonBehavior, BoxLayout):
     text = StringProperty()
     """
     Text value for the local `Label` instance.
-    
+
     :attr:`text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """

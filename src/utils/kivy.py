@@ -20,7 +20,8 @@ __all__ = (
 def create_texture(source: FilePathBytes, extension: str = "jpg"):
     """
     Convenience function to create texture out of bytes
-    :param source: Source parameter for the texture. Could be either `str` or `bytes`
+    :param source: Source parameter for the texture.
+    Could be either `str` or `bytes`
     :param extension: File extension to be used for the texture
     :return: Any
     """
@@ -62,10 +63,14 @@ def get_logger_history() -> str:
     Convenience function to get logger history
     :return: str
     """
-    return '\n'.join(log_record.message for log_record in reversed(LoggerHistory.history))
+    return '\n'.join(
+        log_record.message for log_record in reversed(LoggerHistory.history)
+    )
 
 
-def update_animation_duration(animation_obj: Animation, new_duration: Number) -> None:
+def update_animation_duration(
+        animation_obj: Animation,
+        new_duration: Number) -> None:
     """
     Convenience function to update an `Animation` object's duration
     :param animation_obj: The `Animation` object to be updated
@@ -79,7 +84,9 @@ def update_animation_duration(animation_obj: Animation, new_duration: Number) ->
     )
 
 
-def update_animation_transition(animation_obj: Animation, new_transition: str) -> None:
+def update_animation_transition(
+        animation_obj: Animation,
+        new_transition: str) -> None:
     """
     Convenience function to update an `Animation` object's transition
     :param animation_obj: The `Animation` object to be updated
@@ -100,7 +107,8 @@ def update_animation_properties(
     """
     Convenience function to update an `Animation` object's animated properties
     :param animation_obj: The `Animation` object to be updated
-    :param clear_previous_items: Whether to clear the existing properties before updating
+    :param clear_previous_items: Whether to clear the existing properties
+    before applying the updates or not
     :param kwargs: List of keyword arguments to update the animated properties
     :return: None
     """

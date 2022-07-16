@@ -1,4 +1,4 @@
-from .selectablerecyclelayouts import (
+from .selectablerecyclelayouts import (  # NOQA
     SelectableRecycleBoxLayout,
     SelectableRecycleGridLayout,
 )

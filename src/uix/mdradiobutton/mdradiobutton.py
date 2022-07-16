@@ -14,7 +14,7 @@ class MDRadioButton(ExtendedToggleButtonBehavior, MDBoxLayout):
     text = StringProperty()
     """
     Text value for the local `MDLabel` instance.
-    
+
     :attr:`text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """

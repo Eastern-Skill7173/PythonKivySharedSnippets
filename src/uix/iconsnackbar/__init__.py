@@ -1,1 +1,1 @@
-from .iconsnackbar import IconSnackBar
+from .iconsnackbar import IconSnackBar  # NOQA

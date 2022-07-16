@@ -26,21 +26,21 @@ class NavigationRailItem(ButtonBehavior, BoxLayout):
     icon = StringProperty()
     """
     Icon to be passed to internal `MDIcon` instance.
-    
+
     :attr:`icon` is a :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """
     text = StringProperty()
     """
     Text for the label beneath the `MDIcon` instance.
-    
+
     :attr:`text` is a :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """
     selected = BooleanProperty(False)
     """
     Whether the item is selected or not. Internal.
-    
+
     :attr:`selected` is a :class:`~kivy.properties.BooleanProperty`
     and defaults to `False`.
     """
@@ -50,7 +50,10 @@ class NavigationRailItem(ButtonBehavior, BoxLayout):
         self._screen = Screen()
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(icon={self.icon!r}, text={self.text!r}, selected={self.selected!r})"
+        return f"{type(self).__name__}(" \
+            f"icon={self.icon!r}, " \
+            f"text={self.text!r}, " \
+            f"selected={self.selected!r})"
 
     def on_release(self):
         self.parent.selected_nav_item = self
@@ -58,7 +61,10 @@ class NavigationRailItem(ButtonBehavior, BoxLayout):
     def on_text(self, instance: "NavigationRailItem", text: str) -> None:
         self._screen.name = text
 
-    def on_selected(self, instance: "NavigationRailItem", selected: bool) -> None:
+    def on_selected(
+            self,
+            instance: "NavigationRailItem",
+            selected: bool) -> None:
         md_icon = self.ids.md_icon
         md_label = self.ids.md_label
         if selected:
@@ -83,7 +89,7 @@ class RailItemHolder(RectangularElevationBehavior, GridLayout):
     selected_nav_item = ObjectProperty()
     """
     Currently selected `NavigationRailItem` instance.
-    
+
     :attr:`selected_nav_item` is a :class:`~kivy.properties.ObjectProperty`
     and defaults to `None`.
     """
@@ -93,7 +99,10 @@ class RailItemHolder(RectangularElevationBehavior, GridLayout):
         super(RailItemHolder, self).__init__(**kwargs)
         self._previous_screen_name = None
 
-    def on_selected_nav_item(self, instance: "RailItemHolder", selected_nav_item: NavigationRailItem) -> None:
+    def on_selected_nav_item(
+            self,
+            instance: "RailItemHolder",
+            selected_nav_item: NavigationRailItem) -> None:
         parent_screen_manager = self.parent.ids.screen_manager
         parent_screen_names = parent_screen_manager.screen_names
         selected_screen_name = selected_nav_item.screen.name
@@ -111,7 +120,10 @@ class RailItemHolder(RectangularElevationBehavior, GridLayout):
         parent_screen_manager.add_widget(screen, index=1)
         screen.unbind(name=self._add_screen)
 
-    def _set_initial_nav_item(self, navigation_rail_item: NavigationRailItem, text: str) -> None:
+    def _set_initial_nav_item(
+            self,
+            navigation_rail_item: NavigationRailItem,
+            text: str) -> None:
         self.selected_nav_item = navigation_rail_item
         navigation_rail_item.unbind(text=self._set_initial_nav_item)
 
@@ -126,14 +138,14 @@ class NavigationRail(BoxLayout):
     rail_width = NumericProperty(RAIL_ITEM_HOLDER_DEFAULT_WIDTH)
     """
     Width of the side rail.
-    
+
     :attr:`rail_width` is a :class:`~kivy.properties.NumericProperty`
     and defaults to `_DEFAULT_RAIL_SIZE`.
     """
     transition = ObjectProperty(SnapAnimations.SLIDE_TRANSITION)
     """
     Transition for the internal screen manager.
-    
+
     :attr:`transition` is a :class:`~kivy.properties.ObjectProperty`
     and defaults to `SnapAnimations.SLIDE_TRANSITION`
     """

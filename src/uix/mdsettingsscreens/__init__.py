@@ -1,1 +1,1 @@
-from .mdsettingsscreens import MDLogLayout, MDInfoLayout
+from .mdsettingsscreens import MDLogLayout, MDInfoLayout  # NOQA

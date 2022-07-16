@@ -11,12 +11,12 @@ __all__ = (
 
 
 _DESKTOP_TYPOGRAPHY_PATH: Final = os.path.join(
-    TYPOGRAPHY_DIRECTORY, "desktop_typography.json"
+    TYPOGRAPHY_DIRECTORY, "_desktop_typography.json"
 )
 _MOBILE_TYPOGRAPHY_PATH: Final = os.path.join(
-    TYPOGRAPHY_DIRECTORY, "mobile_typography.json"
+    TYPOGRAPHY_DIRECTORY, "_mobile_typography.json"
 )
-_PLATFORM_SPECIFIC_TYPOGRAPHY: Final = {
+_PLATFORM_SPECIFIC_TYPOGRAPHY_PATH: Final = {
     "win": _DESKTOP_TYPOGRAPHY_PATH,
     "linux": _DESKTOP_TYPOGRAPHY_PATH,
     "macosx": _DESKTOP_TYPOGRAPHY_PATH,
@@ -25,7 +25,7 @@ _PLATFORM_SPECIFIC_TYPOGRAPHY: Final = {
     "unknown": _DESKTOP_TYPOGRAPHY_PATH,
 }
 AppTypoGraphy = TypoGraphy(
-    json_typography_path=_PLATFORM_SPECIFIC_TYPOGRAPHY[platform]
+    json_typography_path=_PLATFORM_SPECIFIC_TYPOGRAPHY_PATH[platform]
 )
 
 for class_name, module in (

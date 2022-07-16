@@ -14,7 +14,7 @@ class Separator(Widget):
     line_thickness = NumericProperty(SEPARATOR_DEFAULT_LINE_THICKNESS)
     """
     Thickness of the separator line and the widget's height.
-    
+
     :attr:`line_thickness` is a :class:`~kivy.properties.NumericProperty`
     and defaults to `SEPARATOR_DEFAULT_LINE_THICKNESS`.
     """
@@ -23,7 +23,7 @@ class Separator(Widget):
     )
     """
     Color of the separator line.
-    
+
     :attr:`line_color` is a :class:`~kivy.properties.ColorProperty`
     and defaults to `(.5, .5, .5, 1)`
     """

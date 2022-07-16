@@ -13,21 +13,21 @@ class IconSnackBar(BaseSnackbar):
     icon_left = StringProperty()
     """
     Icon value for the left icon on the snack-bar.
-    
+
     :attr:`icon_left` is an :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """
     text = StringProperty()
     """
     Text value for the snack-bar item.
-    
+
     :attr:`text` is an :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """
     font_size = NumericProperty("18sp")
     """
     Font size for the internal label.
-    
+
     :attr:`font_size` is a :class:`~kivy.properties.NumericProperty`
     and defaults to `"18sp"`.
     """
@@ -46,7 +46,7 @@ class IconSnackBar(BaseSnackbar):
     SnackBar's label color scheme name.
     Available options are: `'Primary'`, `'Secondary'`, `'Hint'`, `'Error'`,
     `'Custom'`, `'ContrastParentBackground'`.
-    
+
     :attr:`theme_text_color` is an :class:`~kivy.properties.OptionProperty`
     and defaults to `"Primary"`.
     """

@@ -33,9 +33,11 @@ class _LyricsSearchResults:
         try:
             self._title, self._lyrics = api.get_lyrics(song_title).values()
             self._search_successful = True
-        except requests.exceptions.ConnectionError as requests_connection_error:
+        except requests.exceptions.ConnectionError as \
+                requests_connection_error:
             self._exception = requests_connection_error
-        except lyrics_extractor.LyricScraperException as lyric_scraper_exception:
+        except lyrics_extractor.LyricScraperException as \
+                lyric_scraper_exception:
             self._exception = lyric_scraper_exception
         if not self._silent and not self._search_successful:
             raise self._exception
@@ -59,10 +61,14 @@ class _LyricsSearchResults:
 
 class LyricsExtractor:
     """
-    Utility class to search for the lyrics of a song through the given gcs engine id
+    Utility class to search for the lyrics of a song
+    through the given gcs engine-id
     """
 
-    def __init__(self, gcs_api_key: Optional[str] = None, gcs_engine_id: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            gcs_api_key: Optional[str] = None,
+            gcs_engine_id: Optional[str] = None) -> None:
         self._gcs_api_key = gcs_api_key
         self._gcs_engine_id = gcs_engine_id
         self._api = None
@@ -77,7 +83,10 @@ class LyricsExtractor:
             raise ValueError("API key cannot be empty")
         if not self._gcs_engine_id:
             raise ValueError("Engine ID cannot be empty")
-        self._api = lyrics_extractor.SongLyrics(self._gcs_api_key, self._gcs_engine_id)
+        self._api = lyrics_extractor.SongLyrics(
+            self._gcs_api_key,
+            self._gcs_engine_id
+        )
 
     def search_lyrics(self, song_title: str) -> _LyricsSearchResults:
         """
@@ -94,7 +103,9 @@ class LyricsExtractor:
     @gcs_api_key.setter
     def gcs_api_key(self, new_gcs_api_key: str) -> None:
         if not isinstance(new_gcs_api_key, str):
-            raise TypeError(f"Cannot set api key to any other type than string")
+            raise TypeError(
+                "Cannot set api key to any other type than string"
+            )
         if not new_gcs_api_key:
             raise ValueError("API key cannot be empty")
         self._gcs_api_key = new_gcs_api_key
@@ -106,7 +117,9 @@ class LyricsExtractor:
     @gcs_engine_id.setter
     def gcs_engine_id(self, new_gcs_engine_id: str) -> None:
         if not isinstance(new_gcs_engine_id, str):
-            raise TypeError(f"Cannot set engine id to any other type than string")
+            raise TypeError(
+                "Cannot set engine id to any other type than string"
+            )
         if not new_gcs_engine_id:
             raise ValueError("Engine ID cannot be empty")
         self._gcs_engine_id = new_gcs_engine_id

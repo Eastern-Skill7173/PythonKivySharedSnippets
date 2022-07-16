@@ -1,1 +1,1 @@
-from .filechooser import FileChooser
+from .filechooser import FileChooser  # NOQA

@@ -20,8 +20,12 @@ class FileChooser:
     @classmethod
     def _check_in_app_file_chooser(cls) -> None:
         """Checker function to avoid:
-        `ValueError: KivyMD: App object must be initialized before loading root widget.
-        See https://github.com/kivymd/KivyMD/wiki/Modules-Material-App#exceptions`"""
+            `
+            ValueError: KivyMD: App object must be initialized
+            before loading root widget. See:
+            https://github.com/kivymd/KivyMD/wiki/Modules-Material-App#exceptions
+            `
+        """
         if not cls._in_app_file_chooser:
             cls._in_app_file_chooser = MDFileManager(
                 select_path=lambda: None

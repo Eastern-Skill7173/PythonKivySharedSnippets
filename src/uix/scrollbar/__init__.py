@@ -1,1 +1,1 @@
-from .scrollbar import ScrollBar
+from .scrollbar import ScrollBar  # NOQA

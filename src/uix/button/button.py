@@ -15,7 +15,7 @@ class FlatButton(Button):
     )
     """
     Color for the text when button is clicked (active).
-    
+
     :attr:`active_color` is a :class:`~kivy.properties.ColorProperty`
     and defaults to `(.5, .5, .5, 1)`
     """
@@ -24,7 +24,7 @@ class FlatButton(Button):
     )
     """
     Color for the text when button is not clicked (released).
-    
+
     :attr:`normal_color` is a :class:`~kivy.properties.ColorProperty`
     and defaults to `(1, 1, 1, 1)`
     """

@@ -1,1 +1,1 @@
-from .mdradiobutton import MDRadioButton
+from .mdradiobutton import MDRadioButton  # NOQA

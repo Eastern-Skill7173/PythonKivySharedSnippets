@@ -15,14 +15,14 @@ class MDLogLayout(MDBoxLayout):
     logger_history = StringProperty()
     """
     Output of kivy's logging.
-    
+
     :attr:`logger_history` is a :class:`~kivy.properties.StringProperty`
     and defaults to `''`
     """
     warning_note_color = ColorProperty(TOMATO_RGB)
     """
     Warning color for the `NOTE:` portion of the labels.
-    
+
     :attr:`warning_note_color` is a :class:`~kivy.properties.ColorProperty`
     and defaults to `TOMATO_RGB`
     """
@@ -60,14 +60,14 @@ class MDInfoLayout(MDBoxLayout):
     application_name = StringProperty()
     """
     Name of the application.
-    
+
     :attr:`application_name` is a :class:`~kivy.properties.StringProperty`
     and defaults to `''`.
     """
     software_version = StringProperty("0.0.1")
     """
     Current version of the software.
-    
+
     :attr:`software_version` is a :class:`~kivy.properties.StringProperty`
     and defaults to `"0.0.1"`.
     """
