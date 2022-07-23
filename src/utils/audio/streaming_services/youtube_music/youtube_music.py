@@ -22,12 +22,14 @@ __all__ = (
 
 def _check_youtube_dl_config_type(youtube_dl_config: YoutubeDL) -> None:
     """
-    Private function to check whether the given object is of `YoutubeDL` type or not
+    Private function to check whether the given object is of `YoutubeDL` type
     :param youtube_dl_config: Object to apply checks on
     :return: None
     """
     if not isinstance(youtube_dl_config, YoutubeDL):
-        raise TypeError("youtube_dl configuration can only be of type YoutubeDL")
+        raise TypeError(
+            f"youtube_dl configuration can only be of type {YoutubeDL}"
+        )
 
 
 class YouTubeMusicSong(BaseSong):
@@ -38,7 +40,9 @@ class YouTubeMusicSong(BaseSong):
     _youtube_dl = YoutubeDL(
         {
             "format": "bestaudio/best",
-            "outtmpl": os.path.join(YOUTUBE_MUSIC_DOWNLOADS_DIRECTORY, "%(title)s.%(ext)s"),
+            "outtmpl": os.path.join(
+                YOUTUBE_MUSIC_DOWNLOADS_DIRECTORY, "%(title)s.%(ext)s"
+            ),
             "nocheckcertificate": platform == "android"
         }
     )
@@ -51,7 +55,10 @@ class YouTubeMusicSong(BaseSong):
         "_downloaded",
     )
 
-    def __init__(self, song_id: str, fetch_info_immediately: bool = True) -> None:
+    def __init__(
+            self,
+            song_id: str,
+            fetch_info_immediately: bool = True) -> None:
         super(YouTubeMusicSong, self).__init__()
         self._song_id = song_id
         self._downloaded = False
@@ -67,7 +74,8 @@ class YouTubeMusicSong(BaseSong):
     @classmethod
     def set_youtube_dl_config(cls, youtube_dl_config: YoutubeDL) -> None:
         """
-        Class-method to set youtube-dl config obj to as the global config when downloading
+        Class-method to set youtube-dl config obj
+        to as the global config when downloading
         :param youtube_dl_config: YouTubeDL configuration obj to apply
         :return: None
         """
@@ -83,7 +91,9 @@ class YouTubeMusicSong(BaseSong):
         :return: None
         """
         try:
-            extracted_info = self._youtube_dl.extract_info(self._song_id, download=False)
+            extracted_info = self._youtube_dl.extract_info(
+                self._song_id, download=False
+            )
             self._path = self._youtube_dl.prepare_filename(extracted_info)
             self._st_size = extracted_info.get("filesize")
             self._file_size = human_readable_size(self._st_size)
@@ -92,7 +102,9 @@ class YouTubeMusicSong(BaseSong):
             self._date = extracted_info.get("upload_date")
             UrlRequest(
                 extracted_info.get("thumbnail"),
-                on_success=lambda request, result: setattr(self, "_cover", create_texture(result))
+                on_success=lambda request, result: setattr(
+                    self, "_cover", create_texture(result)
+                )
             )
         except AttributeError as attribute_error:
             # youtube-dl raises AttributeError on android
@@ -101,7 +113,8 @@ class YouTubeMusicSong(BaseSong):
     @threaded
     def download(self, silent: bool = False) -> None:
         """
-        Method to download to attempt to download the audio file with the given id
+        Method to download to attempt to download
+        the audio file with the given id
         :param silent: Whether to pass exceptions silently or not
         :return: None
         """

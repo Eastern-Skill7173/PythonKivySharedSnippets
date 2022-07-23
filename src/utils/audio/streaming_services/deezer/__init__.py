@@ -1,1 +1,1 @@
-from .deezer import DeezerSong
+from .deezer import DeezerSong  # NOQA

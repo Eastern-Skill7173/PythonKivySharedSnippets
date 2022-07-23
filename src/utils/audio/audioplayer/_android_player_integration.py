@@ -5,7 +5,8 @@ Shoutout to Tito for this snippet (https://github.com/tito)
 """
 
 from jnius import autoclass
-from src.constants.supported_file_extensions import ANDROID_PLAYER_SUPPORTED_FILE_EXTENSIONS
+from src.constants.supported_file_extensions import \
+    ANDROID_PLAYER_SUPPORTED_FILE_EXTENSIONS
 from kivy.core.audio import Sound
 
 __all__ = (

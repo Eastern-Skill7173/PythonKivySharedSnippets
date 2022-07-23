@@ -1,9 +1,18 @@
+from typing import Final
 from src.type_aliases import FilePath
 from src.utils import (
     convert_file_path_to_string,
     read_json_file,
     write_to_json_file,
 )
+from kivy.properties import (
+    NumericProperty,
+    StringProperty,
+    ListProperty,
+    DictProperty,
+    ObjectProperty,
+)
+from kivy.event import EventDispatcher
 
 
 __all__ = (
@@ -11,17 +20,31 @@ __all__ = (
 )
 
 
-class TypoGraphy:
+class TypoGraphy(EventDispatcher):
     """
     Utility class to load a json file with as a typography reference
     """
+    _PROPERTY_TYPE_MATCH: Final = {
+        int: NumericProperty,
+        str: StringProperty,
+        list: ListProperty,
+        dict: DictProperty,
+    }
 
     def __init__(self, json_typography_path: FilePath):
+        super(TypoGraphy, self).__init__()
         self._json_typography_path = convert_file_path_to_string(
             json_typography_path
         )
         self._typography_dict = read_json_file(self._json_typography_path)
         self.__dict__.update(self._typography_dict)
+        property_dictionary = {
+            property_name: self._PROPERTY_TYPE_MATCH.get(
+                type(value)(value), ObjectProperty(value, rebind=True)
+            )
+            for property_name, value in self._typography_dict.items()
+        }
+        self.apply_property(**property_dictionary)
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(" \

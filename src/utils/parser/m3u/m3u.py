@@ -22,7 +22,8 @@ class AudioFileRef:
     """
     supported_audio_file_extensions = (".mp3",)
     """
-    Tuple of strings indicating supported audio file extensions to be filtered out
+    Tuple of strings indicating supported audio file extensions
+    (during additions unsupported formats will be filtered out)
     """
 
     def __init__(self,
@@ -37,7 +38,9 @@ class AudioFileRef:
         if validate_existence:
             self._exists = os.path.exists(self._source)
         if check_extension:
-            self._is_supported = self._source.endswith(self.supported_audio_file_extensions)
+            self._is_supported = self._source.endswith(
+                self.supported_audio_file_extensions
+            )
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}(source={self._source!r})"
@@ -72,7 +75,8 @@ class AudioDirRef:
         self._directory = str(directory)
         self._audio_files = tuple(
             AudioFileRef(file, check_extension=check_extension)
-            if check_extension else file for file in os.listdir(self._directory)
+            if check_extension
+            else file for file in os.listdir(self._directory)
         )
         self._exists = None
         self._is_dir = None
@@ -137,8 +141,10 @@ class M3UParser:
         m3u_string = ''
         for m3u_obj in args:
             if isinstance(m3u_obj, AudioFileRef):
-                m3u_string += f"{m3u_obj.external_info.as_m3u if m3u_obj.external_info else ''}" \
-                              f"\n{m3u_obj.source}"
+                external_info_string = ''
+                if m3u_obj.external_info:
+                    external_info_string = m3u_obj.external_info.as_m3u
+                m3u_string += f"{external_info_string}\n{m3u_obj.source}"
             elif isinstance(m3u_obj, AudioDirRef):
                 m3u_string += m3u_obj.directory
             else:
@@ -156,7 +162,9 @@ class M3UParser:
         file_structure = []
         last_external_info = None
         for line in string.splitlines():
-            found_matched_prefix = matched_prefix_dict(line, ALL_DIRECTIVE_PREFIXES)
+            found_matched_prefix = matched_prefix_dict(
+                line, ALL_DIRECTIVE_PREFIXES
+            )
             if found_matched_prefix:
                 directive_obj = found_matched_prefix.from_m3u_string(line)
                 file_structure.append(directive_obj)

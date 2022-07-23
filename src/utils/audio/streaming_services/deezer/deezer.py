@@ -47,7 +47,8 @@ class DeezerSong(BaseSong):
     @threaded
     def download(self, silent: bool = False) -> None:
         """
-        Method to download to attempt to download the audio file with the given id
+        Method to download to attempt to download
+        the audio file with the given id
         :param silent: Whether to pass exceptions silently or not
         :return: None
         """

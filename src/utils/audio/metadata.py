@@ -12,7 +12,8 @@ __all__ = (
 def _convert_lyrics_registration_value_to_tag(
         string_or_tag: Optional[str, stagger.id3.USLT]) -> stagger.id3.USLT:
     """
-    Private function to check & convert a lyrics' registration value to an id3 USLT tag
+    Private function to check & convert
+    a lyrics' registration value to an id3 USLT tag
     :param string_or_tag: Lyrics value to check and convert
     :return: stagger.id3.USLT
     """
@@ -21,7 +22,9 @@ def _convert_lyrics_registration_value_to_tag(
     elif isinstance(string_or_tag, stagger.id3.USLT):
         id3_uslt_tag = string_or_tag
     else:
-        raise TypeError("lyrics value must be either a str or a stagger.id3.USLT")
+        raise TypeError(
+            "lyrics value must be either a str or a stagger.id3.USLT"
+        )
     return id3_uslt_tag
 
 
@@ -47,7 +50,11 @@ class AudioMetadata:
     Private tuple containing allowed types for the source
     """
 
-    def __init__(self, source: FilePath, silent: bool = False, **default_values) -> None:
+    def __init__(
+            self,
+            source: FilePath,
+            silent: bool = False,
+            **default_values) -> None:
         self._source = convert_file_path_to_string(source)
         self._core_metadata = None
         self._tags_available = False
@@ -66,12 +73,16 @@ class AudioMetadata:
                f"tags_available={self._tags_available!r}" \
                f")"
 
-    def update_fetched_tags(self, silent: bool = False, **default_values) -> None:
+    def update_fetched_tags(
+            self,
+            silent: bool = False,
+            **default_values) -> None:
         """
-        Method to re-extract the tags of the already given source path (`self._source`)
+        Method to re-extract the tags of the already given source
         :param silent: Whether to pass exceptions silently
-        :param default_values: A Pair of keyword arguments representing values to be used in case
-        the given attr was not packed with the file or there was an error
+        :param default_values: A Pair of keyword arguments representing values
+        to be used in case the given attr was not packed
+        with the file or there was an error
         :return: None
         """
         self._core_metadata = None
@@ -86,11 +97,26 @@ class AudioMetadata:
         try:
             self._core_metadata = stagger.read_tag(self._source)
             self._tags_available = True
-            self._title = self._core_metadata.title if self._core_metadata.title else default_title
-            self._album = self._core_metadata.album if self._core_metadata.album else default_album
-            self._artist = self._core_metadata.artist if self._core_metadata.artist else default_artist
-            self._genre = self._core_metadata.genre if self._core_metadata.genre else default_genre
-            self._date = self._core_metadata.date if self._core_metadata.date else default_date
+            if self._core_metadata.title:
+                self._title = self._core_metadata.title
+            else:
+                self._title = default_title
+            if self._core_metadata.album:
+                self._album = self._core_metadata.album
+            else:
+                self._album = default_album
+            if self._core_metadata.artist:
+                self._artist = self._core_metadata.artist
+            else:
+                self._artist = default_artist
+            if self._core_metadata.genre:
+                self._genre = self._core_metadata.genre
+            else:
+                self._genre = default_genre
+            if self._core_metadata.date:
+                self._date = self._core_metadata.date
+            else:
+                self._date = default_date
             try:
                 self._lyrics = self._core_metadata[stagger.id3.USLT][0].text
             except KeyError:
@@ -120,7 +146,7 @@ class AudioMetadata:
         """
         Method to write new values for the tags of the audio file
         :param silent: Whether to pass exceptions silently or not
-        :param new_tags: List of keyword arguments holding new values for each tag
+        :param new_tags: Keyword arguments holding new values for each tag
         :return: None
         """
         exception = None
@@ -143,8 +169,10 @@ class AudioMetadata:
             if new_date:
                 self._date = self._core_metadata.date = new_date
             if new_lyrics:
-                converted_lyrics_id3_tag = _convert_lyrics_registration_value_to_tag(new_lyrics)
-                self._lyrics = self._core_metadata[stagger.id3.USLT] = converted_lyrics_id3_tag
+                converted_lyrics_id3_tag = \
+                    _convert_lyrics_registration_value_to_tag(new_lyrics)
+                self._lyrics = self._core_metadata[stagger.id3.USLT] = \
+                    converted_lyrics_id3_tag
             if new_cover:
                 self._cover = self._core_metadata.picture = new_cover
             self._core_metadata.write()
@@ -160,7 +188,9 @@ class AudioMetadata:
     @source.setter
     def source(self, new_source: FilePath) -> None:
         if not isinstance(new_source, self._ALLOWED_PATH_TYPES):
-            raise TypeError(f"paths can only be from {self._ALLOWED_PATH_TYPES!r}")
+            raise TypeError(
+                f"paths can only be from {self._ALLOWED_PATH_TYPES!r}"
+            )
         self._source = convert_file_path_to_string(new_source)
         self.update_fetched_tags()
 

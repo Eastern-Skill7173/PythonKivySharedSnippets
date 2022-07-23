@@ -1,1 +1,1 @@
-from .audioplayer import AudioPlayer
+from .audioplayer import AudioPlayer  # NOQA

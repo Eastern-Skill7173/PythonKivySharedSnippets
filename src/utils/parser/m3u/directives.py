@@ -39,9 +39,12 @@ class _Directive:
     """
 
     def __init__(self):
+        separator_character = ''
+        if self.supports_parameters:
+            separator_character = self.SEPARATOR_CHARACTER
         self._as_m3u = f"{self.LEADING_CHARACTER}" \
                        f"{type(self).__name__}" \
-                       f"{self.SEPARATOR_CHARACTER if self.supports_parameters else ''}"
+                       f"{separator_character}"
         self._m3u_string_parameters = ''
 
     def __repr__(self) -> str:
@@ -52,7 +55,9 @@ class _Directive:
         return cls()
 
     @classmethod
-    def _separate_parameters_from_directive(cls, m3u_string: str) -> Optional[str]:
+    def _separate_parameters_from_directive(
+            cls,
+            m3u_string: str) -> Optional[str]:
         """
         Private class-method to separate parameters from extended directives
         :param m3u_string: The string to separate parameters from
@@ -85,11 +90,16 @@ class EXTINF(_Directive):  # NOQA
     """
     ARTIST_TITLE_SEPARATOR: Final = '-'
     """
-    Separator used for differentiating track artist and title from other properties
+    Separator used for differentiating track artist and title
+    from other properties
     """
-    _compiled_separator = re.compile(f"[{TIME_SEPARATOR}{ARTIST_TITLE_SEPARATOR}]", flags=re.IGNORECASE)
+    _compiled_separator = re.compile(
+        f"[{TIME_SEPARATOR}{ARTIST_TITLE_SEPARATOR}]",
+        flags=re.IGNORECASE
+    )
     """
-    Compiled regex pattern separating each of track length, artist, and title from string
+    Compiled regex pattern separating each of track length, artist,
+    and title from string
     """
 
     def __init__(self, track_length: Number, artist: str, title: str):
@@ -169,7 +179,8 @@ class EXTGRP(_Directive):  # NOQA
 
 class EXTALB(_Directive):  # NOQA
     """
-    Directive supplying single parameter indicating album information, title in particular
+    Directive supplying single parameter indicating album information,
+    title in particular
     """
     supports_parameters = True
 
@@ -249,7 +260,9 @@ class EXTBYT(_Directive):  # NOQA
 
     @classmethod
     def from_m3u_string(cls, m3u_string: str):
-        size_in_bytes = int(cls._separate_parameters_from_directive(m3u_string).strip())
+        size_in_bytes = int(
+            cls._separate_parameters_from_directive(m3u_string).strip()
+        )
         return cls(size_in_bytes=size_in_bytes)
 
     @property
@@ -293,10 +306,15 @@ class EXTIMG(_Directive):  # NOQA
     supports_parameters = True
     supported_image_file_extensions = (".jpg", ".png",)
     """
-    Tuple of strings indicating supported image file extensions to be filtered out
+    Tuple of strings indicating supported image file extensions
+    to be filtered out
     """
 
-    def __init__(self, cover_img: FilePath, validate_existence: bool = True, check_extension: bool = True):
+    def __init__(
+            self,
+            cover_img: FilePath,
+            validate_existence: bool = True,
+            check_extension: bool = True):
         super(EXTIMG, self).__init__()
         self._cover_img = str(cover_img).strip()
         self._as_m3u += self._cover_img
@@ -305,7 +323,8 @@ class EXTIMG(_Directive):  # NOQA
         if validate_existence:
             self._exists = os.path.exists(self._cover_img)
         if check_extension:
-            self._is_supported = self._cover_img.endswith(self.supported_image_file_extensions)
+            self._is_supported = \
+                self._cover_img.endswith(self.supported_image_file_extensions)
 
     @classmethod
     def from_m3u_string(cls, m3u_string: str):

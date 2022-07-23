@@ -2,7 +2,8 @@
 Not Implemented
 """
 
-from src.constants.supported_file_extensions import WINDOWS_PLAYER_SUPPORTED_FILE_EXTENSIONS
+from src.constants.supported_file_extensions import \
+    WINDOWS_PLAYER_SUPPORTED_FILE_EXTENSIONS
 from kivy.core.audio import Sound
 
 __all__ = (

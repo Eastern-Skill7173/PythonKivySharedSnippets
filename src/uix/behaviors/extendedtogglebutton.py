@@ -17,7 +17,9 @@ class ExtendedToggleButtonBehavior(ToggleButtonBehavior):
     """
 
     @classmethod
-    def get_active_group_member(cls, group: str) -> Type["ExtendedToggleButtonBehavior"]:
+    def get_active_group_member(
+            cls,
+            group: str) -> Type["ExtendedToggleButtonBehavior"]:
         if group:
             for group_member in cls.get_widgets(group):
                 if group_member.active:

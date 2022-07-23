@@ -1,1 +1,1 @@
-from .spotify import SpotifySong
+from .spotify import SpotifySong  # NOQA

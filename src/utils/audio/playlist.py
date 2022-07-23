@@ -32,7 +32,9 @@ class Playlist:
         self.add(*args)
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(name={self._name!r}, length={self.__len__()})"
+        return f"{type(self).__name__}(" \
+            f"name={self._name!r}, " \
+            f"length={self.__len__()})"
 
     def __contains__(self, item) -> bool:
         return item in self._songs
@@ -70,7 +72,9 @@ class Playlist:
         if not name:
             raise ValueError("name cannot be empty")
         if name in cls._used_names:
-            raise ValueError(f"name {name!r} already has been used for another playlist")
+            raise ValueError(
+                f"name {name!r} already has been used for another playlist"
+            )
 
     @classmethod
     def _check_obj_type(cls, obj) -> None:
@@ -86,7 +90,8 @@ class Playlist:
     @classmethod
     def _update_used_names(cls, name: str) -> None:
         """
-        Class-method to check the given name, upon passing add the name to the used names
+        Class-method to check the given name,
+        upon passing add the name to the used names
         :param name: The given name to be checked, then added to the used names
         :return: None
         """
@@ -95,8 +100,10 @@ class Playlist:
 
     def shuffle(self, return_copy: bool = True) -> Optional[list]:
         """
-        Method to shuffle the playlist's songs, whether in-place or as a copied list
-        :param return_copy: Return the shuffled songs as a copied list or shuffle in-place
+        Method to shuffle the playlist's songs,
+        whether in-place or as a copied list
+        :param return_copy:
+        Return the shuffled songs as a copied list or shuffle in-place
         :return: Optional[list]
         """
         return shuffle(self._songs, return_copy=return_copy)
@@ -148,4 +155,5 @@ class Playlist:
     @property
     def string_length(self) -> str:
         current_length = self.__len__()
-        return f"{current_length} song{'s' if is_plural(current_length) else ''}"
+        return f"{current_length} song" \
+            f"{'s' if is_plural(current_length) else ''}"

@@ -32,8 +32,9 @@ if platform in os.getenv("PLATFORM_AUDIO_PLAYER_INTEGRATION", '').split(','):
 
 """
 In order to integrate and utilize every platform's native media player,
-before importing the module you must set the "PLATFORM_AUDIO_PLAYER_INTEGRATION"
-environmental variable to a list of platforms separated with a comma.
+before importing the module you must set the
+"PLATFORM_AUDIO_PLAYER_INTEGRATION" environmental variable
+to a list of platforms separated with a comma.
 As an example, to integrate the player with android and windows:
 
     import os
@@ -54,14 +55,20 @@ Soon to be integrated:
 """
 
 
-def _convert_registration_value_to_sound_objs(filepath_or_sound_obj: Union[FilePath, Sound]) -> Sound:
+def _convert_registration_value_to_sound_objs(
+        filepath_or_sound_obj: Union[FilePath, Sound]) -> Sound:
     """
     Private function to check & convert registration value to sound objects
-    :param filepath_or_sound_obj: Path or sound object at registration to be converted
+    :param filepath_or_sound_obj:
+    Path or sound object at registration to be converted
     :return: Sound
     """
     if isinstance(filepath_or_sound_obj, (str, Path)):
-        sound_obj = SoundLoader.load(convert_file_path_to_string(filepath_or_sound_obj))
+        sound_obj = SoundLoader.load(
+            convert_file_path_to_string(
+                filepath_or_sound_obj
+            )
+        )
     elif isinstance(filepath_or_sound_obj, Sound):
         sound_obj = filepath_or_sound_obj
     else:
@@ -71,7 +78,8 @@ def _convert_registration_value_to_sound_objs(filepath_or_sound_obj: Union[FileP
 
 class AudioPlayer:
     """
-    Audio player class for extending standard `SoundLoader` functionalities including:
+    Audio player class for extending standard `SoundLoader` functionalities,
+    including:
     queuing, fast forwarding, rewinding, global volume, extended states...
     This class has the most integration with ffmpeg & the `ffpyplayer` package.
     In order to switch your audio provider, check out:
@@ -139,7 +147,8 @@ class AudioPlayer:
     @classmethod
     def register(cls, alias, value) -> None:
         """
-        Class-method to register a sound object or a string as an easily accessible alias
+        Class-method to register a sound object or a string
+        as an easily accessible alias
         :param alias: Alias to be used for the value
         :param value: The value to be registered with the given alias
         :return: None
@@ -155,14 +164,17 @@ class AudioPlayer:
         :return: None
         """
         if not isinstance(obj, cls._ALLOWED_CLASSES):
-            raise TypeError(f"object can only be either {cls._ALLOWED_CLASSES!r}")
+            raise TypeError(
+                f"object can only be either {cls._ALLOWED_CLASSES!r}"
+            )
 
     @classmethod
     def get_alias(cls, alias, default_value=None):
         """
         Class-method to get a registered alias value
         :param alias: Alias that is registered with the value
-        :param default_value: Value to return if the given alias could not be found
+        :param default_value:
+        Value to return if the given alias could not be found
         :return: Any
         """
         return cls._aliases.get(alias, default_value)
@@ -177,7 +189,8 @@ class AudioPlayer:
 
     def _update_pos_estimate(self, position: Number) -> None:
         """
-        Private method to update the position estimate with the given position in seconds
+        Private method to update the position estimate
+        with the given position in seconds
         :param position: New position of the current audio file in seconds
         :return: None
         """
@@ -197,7 +210,9 @@ class AudioPlayer:
         :return: None
         """
         self._clock_event = Clock.schedule_interval(
-            lambda dt: self._update_pos_estimate(self._pos_estimate + self._interval),
+            lambda dt: self._update_pos_estimate(
+                self._pos_estimate + self._interval
+            ),
             self._interval
         )
 
@@ -213,7 +228,8 @@ class AudioPlayer:
     def _cancel_estimation(self) -> None:
         """
         Method to be bound to every sound object's `on_stop` event
-        to cancel the clock to prevent inaccurate position estimation if enabled
+        to cancel the clock to prevent inaccurate position estimation
+        (if enabled during initialization)
         :return: None
         """
         if self._estimate_position:
@@ -248,7 +264,8 @@ class AudioPlayer:
     def _configure_sound_obj(self, sound_obj: Sound) -> None:
         """
         Private method to configure a sound object to match player behavior.
-        (Set its volume to globally declared volume, Bind `on_play` & `on_stop` methods...)
+        (Set its volume to globally declared volume,
+        Bind `on_play` & `on_stop` methods...)
         :param sound_obj: The sound object to be configured
         :return:
         """
@@ -273,10 +290,12 @@ class AudioPlayer:
              ignore_aliases: bool = False) -> None:
         """
         Method to add audio files to queue
-        :param args: List of strings representing individual paths to audio files
-        or pre-initialized sound objects
-        :param clear_previous_queue: Clear whatever is in the queue before loading new files
-        :param ignore_aliases: Whether to avoid fetching given values from registered aliases
+        :param args: List of strings representing individual paths
+        to audio files or pre-initialized sound objects
+        :param clear_previous_queue:
+        Clear whatever is in the queue before loading new files
+        :param ignore_aliases:
+        Whether to avoid fetching given values from registered aliases
         :return: None
         """
         if clear_previous_queue:
@@ -377,9 +396,12 @@ class AudioPlayer:
                      restart_audio_position: bool = True) -> None:
         """
         Method to load the next audio file in the queue
-        :param play_immediately: Whether to play the next track immediately or just load it
-        :param stop_current_playback: Whether to call `self.stop` on the current audio file
-        :param restart_audio_position: Whether to reset the position of the current audio file
+        :param play_immediately:
+        Whether to play the next track immediately or just load it
+        :param stop_current_playback:
+        Whether to call `self.stop` on the current audio file
+        :param restart_audio_position:
+        Whether to reset the position of the current audio file
         :return: None
         """
         if stop_current_playback:
@@ -396,9 +418,12 @@ class AudioPlayer:
                          restart_audio_position: bool = True) -> None:
         """
         Method to load the previous audio file in the queue
-        :param play_immediately: Whether to play the previous track immediately or just load it
-        :param stop_current_playback: Whether to call `self.stop` on the current audio file
-        :param restart_audio_position: Whether to reset the position of the current audio file
+        :param play_immediately:
+        Whether to play the previous track immediately or just load it
+        :param stop_current_playback:
+        Whether to call `self.stop` on the current audio file
+        :param restart_audio_position:
+        Whether to reset the position of the current audio file
         :return: None
         """
         if stop_current_playback:

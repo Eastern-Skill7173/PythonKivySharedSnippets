@@ -1,1 +1,1 @@
-from .soundcloud import SoundCloudSong
+from .soundcloud import SoundCloudSong  # NOQA

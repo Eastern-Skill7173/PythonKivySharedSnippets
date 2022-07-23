@@ -53,7 +53,7 @@ class BaseSong:
         (Method can also be called from the user in order
         to re-fetch the information)
         :param silent: Whether to pass exceptions silently or not
-        :param default_values: A pair of keyword arguments representing default values
+        :param default_values: Keyword arguments representing default values
         to be used on exception or when no value is found
         :return: None
         """
