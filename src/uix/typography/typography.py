@@ -39,9 +39,8 @@ class TypoGraphy(EventDispatcher):
         self._typography_dict = read_json_file(self._json_typography_path)
         self.__dict__.update(self._typography_dict)
         property_dictionary = {
-            property_name: self._PROPERTY_TYPE_MATCH.get(
-                type(value)(value), ObjectProperty(value, rebind=True)
-            )
+            property_name:
+            self._PROPERTY_TYPE_MATCH.get(type(value), ObjectProperty)(value)
             for property_name, value in self._typography_dict.items()
         }
         self.apply_property(**property_dictionary)
