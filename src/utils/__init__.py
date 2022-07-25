@@ -1,5 +1,5 @@
-import json
 import re
+import humanize.filesize
 from datetime import datetime
 from typing import (
     Callable,
@@ -8,14 +8,8 @@ from typing import (
     Dict,
     Any,
 )
-from src.type_aliases import (
-    Number,
-    FilePath,
-)
-from src.constants.measurement_units import (
-    HOUR,
-    MINUTE,
-)
+from src.type_aliases import Number, FilePath
+from src.constants.measurement_units import HOUR, MINUTE
 from pathlib import Path
 from threading import Thread
 
@@ -34,8 +28,6 @@ __all__ = (
     "human_readable_size",
     "human_readable_duration",
     "human_readable_timestamp",
-    "read_json_file",
-    "write_to_json_file",
 )
 
 
@@ -142,6 +134,20 @@ def matched_prefix_dict(
     return found_matched_prefix
 
 
+def human_readable_size(size_in_bytes: Number, rounding_point: int = 2) -> str:
+    """
+    Convenience function to convert size in bytes to a human-readable form
+    :param size_in_bytes: Size of a file or object in bytes
+    :param rounding_point:
+    Position of the floating point passed as the string formatter
+    :return: str
+    """
+    return humanize.filesize.naturalsize(
+        value=size_in_bytes,
+        format=f"%.{rounding_point}f"
+    )
+
+
 def human_readable_duration(seconds: Number) -> str:
     """
     Convenience function to convert duration of an audio file
@@ -175,46 +181,3 @@ def human_readable_timestamp(
     :return: str
     """
     return datetime.fromtimestamp(timestamp).strftime(string_format)
-
-
-def read_json_file(path: str, silent: bool = True) -> Optional[dict]:
-    """
-    Convenience function to read a json file with catching exceptions
-    :param path: Path to the json file
-    :param silent: Whether to ignore exceptions or not
-    :return: Optional[dict]
-    """
-    content = None
-    exception = None
-    try:
-        with open(path, 'r') as json_file:
-            content = json.load(json_file)
-    except FileNotFoundError as file_not_found_error:
-        exception = file_not_found_error
-    except json.decoder.JSONDecodeError as json_decode_error:
-        exception = json_decode_error
-    if not silent and exception:
-        raise exception
-    return content
-
-
-def write_to_json_file(content,
-                       path: str,
-                       indent: int = 4,
-                       sort_keys: bool = False,
-                       silent: bool = True) -> None:
-    """
-    Convenience function to write the given content to a json file
-    :param content: Content to write to the json file
-    :param path: Path to the json file
-    :param indent: Indentation to be used for writing to the json file
-    :param sort_keys: Whether to sort keys when writing or not
-    :param silent: Whether to silently pass exceptions or not
-    :return: None
-    """
-    try:
-        with open(path, 'w') as json_file:
-            json.dump(content, json_file, indent=indent, sort_keys=sort_keys)
-    except TypeError as type_error:
-        if not silent:
-            raise type_error
