@@ -16,7 +16,7 @@ from threading import Thread
 __all__ = (
     "threaded",
     "convert_file_path_to_string",
-    "convert_string_to_file_path",
+    "convert_file_path_to_path_obj",
     "get_number_of_digits",
     "is_plural",
     "shuffle",
@@ -55,7 +55,7 @@ def convert_file_path_to_string(file_path: FilePath) -> str:
     return str(file_path)
 
 
-def convert_string_to_file_path(file_path: FilePath) -> Path:
+def convert_file_path_to_path_obj(file_path: FilePath) -> Path:
     """
     Convenience/Semantic function to convert a file path to a path obj
     :param file_path: String or object to convert

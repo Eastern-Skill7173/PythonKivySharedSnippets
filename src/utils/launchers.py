@@ -3,7 +3,10 @@ import subprocess
 import webbrowser
 from src.constants import CURRENT_MACHINE
 from src.type_aliases import FilePath
-from src.utils import convert_file_path_to_string
+from src.utils import (
+    convert_file_path_to_string,
+    convert_file_path_to_path_obj,
+)
 
 __all__ = (
     "open_link",
@@ -50,37 +53,30 @@ def open_file(file_path: FilePath) -> None:
         subprocess.Popen(["xdg-open", file_path])
 
 
-def open_file_explorer(
-        file_or_directory_path: FilePath,
-        highlight: bool = False) -> None:
+def open_file_explorer(file_or_directory_path: FilePath) -> None:
     """
     NOT TESTED
     Convenience function to open the file explorer in the
-    directory of the file and optionally highlighting it
+    parent directory of the given path and highlighting it
     :param file_or_directory_path: Path to the file or directory to be opened
-    :param highlight: Hightlight the directory or path after opening
     :return: None
     """
-    file_or_directory_path = convert_file_path_to_string(
-        file_or_directory_path
+    parent_path = convert_file_path_to_string(
+        convert_file_path_to_path_obj(file_or_directory_path).parent
     )
     command_list = None
     if CURRENT_MACHINE == "Windows":
         command_list = [
-            "explorer",
-            f"{'/select,' if highlight else ''}{file_or_directory_path}"
+            "explorer", f"/select,{parent_path}"
         ]
     elif CURRENT_MACHINE == "Darwin":
         command_list = [
-            "open",
-            "-R" if highlight else '',
-            f'"{file_or_directory_path}"'
+            "open", "-R", f'"{parent_path}"'
         ]
     else:
         # Cross-platfrom highlighting is not yet implemented
         # in linux and other operating systems...
         command_list = [
-            "xdg-open",
-            f'"{file_or_directory_path}"'
+            "xdg-open", f'"{parent_path}"'
         ]
     subprocess.Popen(command_list)
