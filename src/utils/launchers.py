@@ -13,7 +13,7 @@ __all__ = (
     "open_link",
     "open_terminal",
     "open_file",
-    "open_file_explorer",
+    "open_file_manager",
 )
 
 
@@ -63,12 +63,12 @@ def open_file(file_path: FilePath) -> None:
         )
 
 
-def open_file_explorer(file_or_directory_path: FilePath) -> None:
+def open_file_manager(file_or_directory_path: FilePath) -> None:
     """
     NOT TESTED
-    Convenience function to open the file explorer in the
+    Convenience function to open the file manager in the
     parent directory of the given path and highlighting it
-    if supported by the file browser
+    if supported by the file manager
     :param file_or_directory_path: Path to the file or directory to be opened
     :return: None
     """
