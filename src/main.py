@@ -1,10 +1,17 @@
-from constants.app_info import (
+import sys
+from pathlib import Path
+from typing import Final
+
+PROJECT_PATH: Final = str(Path(__file__).parent.parent)
+sys.path.append(PROJECT_PATH)
+
+from src.constants.app_info import (  # NOQA
     STARTUP_WIDTH,
     STARTUP_HEIGHT,
     AUDIO_PROVIDER,
     ICON_PATH,
 )
-import os
+import os  # NOQA
 
 os.environ["KIVY_AUDIO"] = AUDIO_PROVIDER
 os.environ["PLATFORM_AUDIO_PLAYER_INTEGRATION"] = "android,windows,linux"

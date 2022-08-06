@@ -137,7 +137,6 @@ class M3UParser:
         Class-method to dump python content into M3U strings
         :return: str
         """
-        # '\n'.join(m3u_obj.as_m3u for m3u_obj in args)
         m3u_string = ''
         for m3u_obj in args:
             if isinstance(m3u_obj, AudioFileRef):
@@ -153,27 +152,26 @@ class M3UParser:
         return m3u_string
 
     @classmethod
-    def loads(cls, string: str) -> list:
+    def loads(cls, m3u_string: str) -> None:
         """
         Class-method to load a multi-lined M3U string into python
         :param string: The string to parse
-        :return: list
+        :return: None
         """
-        file_structure = []
+        parsed_line = None
         last_external_info = None
-        for line in string.splitlines():
+        for line in m3u_string.splitlines():
             found_matched_prefix = matched_prefix_dict(
                 line, ALL_DIRECTIVE_PREFIXES
             )
             if found_matched_prefix:
                 directive_obj = found_matched_prefix.from_m3u_string(line)
-                file_structure.append(directive_obj)
+                parsed_line = directive_obj
                 if isinstance(directive_obj, EXTINF):
                     last_external_info = directive_obj
             else:
                 if not line.isspace():
-                    file_structure.append(
+                    parsed_line = \
                         AudioFileRef(line, external_info=last_external_info)
-                    )
                     last_external_info = None
-        return file_structure
+            yield parsed_line
