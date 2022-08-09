@@ -1,10 +1,7 @@
 from typing import Final
 from src.type_aliases import FilePath
-from src.utils import (
-    convert_file_path_to_string,
-    read_json_file,
-    write_to_json_file,
-)
+from src.utils import convert_file_path_to_string
+from src.utils.json import read_json_file, write_to_json_file
 from kivy.properties import (
     NumericProperty,
     StringProperty,

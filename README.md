@@ -218,8 +218,9 @@ If you want to do it manually follow the next steps:
     pip3 install -r requirements.txt
     ```
 
-8. The project is now installed! All that is remaining is to run the `main.py` file, like so:
+8. The project is now installed! All that remains is running the `main.py` file inside the `src/` directory, like so:
     ```
+    cd src/
     python3 main.py
     ```
 

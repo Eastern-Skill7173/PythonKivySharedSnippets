@@ -3,7 +3,7 @@ from typing import Final
 from src.constants.app_info import UIX_DIRECTORY, TYPOGRAPHY_DIRECTORY
 from kivy.utils import platform
 from kivy.factory import Factory
-from src.uix._typography import TypoGraphy
+from src.uix.typography import TypoGraphy
 
 __all__ = (
     "AppTypoGraphy",

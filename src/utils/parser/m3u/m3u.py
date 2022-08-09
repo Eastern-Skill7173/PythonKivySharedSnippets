@@ -4,7 +4,12 @@ Module is still NOT implemented
 
 
 import os.path
-from typing import TextIO, Optional
+from typing import (
+    TextIO,
+    Optional,
+    Generator,
+    Any,
+)
 from src.type_aliases import FilePath
 from src.utils import matched_prefix_dict
 from src.utils.parser.m3u.directives import ALL_DIRECTIVE_PREFIXES, EXTINF
@@ -152,11 +157,11 @@ class M3UParser:
         return m3u_string
 
     @classmethod
-    def loads(cls, m3u_string: str) -> None:
+    def loads(cls, m3u_string: str) -> Generator[Any, None, None]:
         """
         Class-method to load a multi-lined M3U string into python
         :param string: The string to parse
-        :return: None
+        :return: Generator
         """
         parsed_line = None
         last_external_info = None

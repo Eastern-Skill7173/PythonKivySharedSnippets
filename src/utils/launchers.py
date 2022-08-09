@@ -1,8 +1,14 @@
 import os
 import subprocess
 import webbrowser
-from src.constants import CURRENT_MACHINE
-from src.constants.terminal_commands import SUPPORTED_LINUX_FILE_BROWSERS
+from src.constants import (
+    CURRENT_MACHINE,
+    DESKTOP_ENVIRONMENT,
+)
+from src.constants.terminal_commands import (
+    SUPPORTED_LINUX_FILE_BROWSERS,
+    SUPPORTED_LINUX_TERMINALS,
+)
 from src.type_aliases import FilePath
 from src.utils import (
     convert_file_path_to_string,
@@ -35,10 +41,30 @@ def open_terminal(directory: FilePath) -> None:
     :return: None
     """
     directory = convert_file_path_to_string(directory)
-    subprocess.Popen(
-        ["cd", f'"{directory}"'],
-        creationflags=subprocess.CREATE_NEW_CONSOLE
-    )
+    command_list = None
+    if CURRENT_MACHINE == "Windows":
+        command_list = [
+            "PowerShell",
+            "Start-Process",
+            "-WorkingDirectory",
+            directory,
+            "PowerShell"
+        ]
+    elif CURRENT_MACHINE == "Darwin":
+        command_list = [
+            "open",
+            "-a",
+            "Terminal",
+            directory
+        ]
+    else:
+        linux_terminal_command = \
+            SUPPORTED_LINUX_TERMINALS.get(DESKTOP_ENVIRONMENT)
+        if linux_terminal_command is not None:
+            command_list = [*linux_terminal_command, directory]
+        else:
+            command_list = []
+    subprocess.Popen(command_list)
 
 
 def open_file(file_path: FilePath) -> None:
@@ -54,12 +80,10 @@ def open_file(file_path: FilePath) -> None:
     elif CURRENT_MACHINE == "Darwin":
         subprocess.Popen(
             ["open", file_path],
-            creationflags=subprocess.CREATE_NO_WINDOW
         )
     else:
         subprocess.Popen(
             ["xdg-open", file_path],
-            creationflags=subprocess.CREATE_NO_WINDOW
         )
 
 
@@ -82,20 +106,23 @@ def open_file_manager(file_or_directory_path: FilePath) -> None:
         ]
     elif CURRENT_MACHINE == "Darwin":
         command_list = [
-            "open", "-R", f'"{file_or_directory_path}"'
+            "open", "-R", file_or_directory_path
         ]
     else:
         # On Linux, many file managers do not support
         # highlighting a file or folder
-        desktop_environment = os.getenv("DESKTOP_SESSION")
         linux_file_browser_command = \
-            SUPPORTED_LINUX_FILE_BROWSERS.get(desktop_environment)
+            SUPPORTED_LINUX_FILE_BROWSERS.get(DESKTOP_ENVIRONMENT)
         if linux_file_browser_command is None:
             parent_path = convert_file_path_to_string(
                 convert_file_path_to_path_obj(file_or_directory_path).parent
             )
-            linux_file_browser_command = [
-                "xdg-open", f'"{parent_path}"'
+            command_list = [
+                "xdg-open", parent_path
             ]
-        command_list = linux_file_browser_command
-    subprocess.Popen(command_list, creationflags=subprocess.CREATE_NO_WINDOW)
+        else:
+            command_list = [
+                *linux_file_browser_command,
+                file_or_directory_path
+            ]
+    subprocess.Popen(command_list)
