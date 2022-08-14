@@ -4,7 +4,7 @@
 #:import AUTHOR_GITHUB_URL src.constants.AUTHOR_GITHUB_URL
 #:import platform kivy.utils.platform
 #:import get_hex_from_color kivy.utils.get_hex_from_color
-#:import open_link src.utils.launchers.open_link
+#:import open_url os_launchers.open_url
 <LogLayout>:
     orientation: "vertical"
     spacing: "15dp"
@@ -109,7 +109,7 @@
                 size_hint_y: None
                 height: self.texture_size[1]
                 on_ref_press:
-                    open_link(args[1])
+                    open_url(args[1])
             Label:
                 text: f"VERSION: {root.software_version}"
                 font_size: AppTypoGraphy.secondary_label

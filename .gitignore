@@ -1,7 +1,9 @@
 .vscode/
+.mypy_cache/
 .buildozer/
 .idea/
 venv/
 bin/
 __pycache__/
 release/
+project_setup_requirements.txt

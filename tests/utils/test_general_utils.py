@@ -1,6 +1,12 @@
-import unittest
+import sys
 from pathlib import Path
-from src import utils
+from typing import Final
+
+PROJECT_PATH: Final = str(Path(__file__).parent.parent.parent)
+sys.path.append(PROJECT_PATH)
+
+import unittest  # NOQA
+from src import utils  # NOQA
 
 
 class TestGeneralUtils(unittest.TestCase):

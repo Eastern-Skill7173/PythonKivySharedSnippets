@@ -7,3 +7,5 @@ youtube_dl~=2021.12.17
 stagger~=1.0.0
 https://github.com/kivy/plyer/archive/master.zip
 humanize~=4.2.3
+os-launchers~=0.1.0
+py-m3u~=0.0.1

@@ -1,5 +1,3 @@
-import os
-import platform
 from typing import Final
 
 __all__ = (
@@ -17,8 +15,6 @@ __all__ = (
     "MUSICS_SOURCE_SHORT_URL",
     "DESKTOP_PLATFORMS",
     "MOBILE_PLATFORMS",
-    "CURRENT_MACHINE",
-    "DESKTOP_ENVIRONMENT",
 )
 
 
@@ -46,5 +42,3 @@ MOBILE_PLATFORMS: Final = (
     "android",
     "ios",
 )
-CURRENT_MACHINE: Final = platform.system()
-DESKTOP_ENVIRONMENT: Final = os.getenv("DESKTOP_SESSION")
